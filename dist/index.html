@@ -1,74 +1,124 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — Perception beyond the vehicle.</title><meta name="description" content="Cosmic is developing radio-frequency perception infrastructure: a shared spatial model for machines and software."><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — Perception beyond the vehicle."><meta property="og:description" content="Cosmic is developing radio-frequency perception infrastructure: a shared spatial model for machines and software."><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script></head><body data-scene="network">
-<link rel="stylesheet" href="assets/experience.css">
-<a class="home-wordmark" href="#top" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic" fetchpriority="high"></a>
-<header class="experience-nav"><nav class="home-navigation" aria-label="Explore Cosmic"><a href="invention.html">The Invention</a><a href="infrastructure.html">Infrastructure</a><a href="automotive.html">Automotive</a></nav></header>
-<main class="experience-shell" id="experience">
-  <section class="brand-intro" id="top" aria-labelledby="intro-title">
-    <div class="intro-copy"><h1 id="intro-title">Perception.<br><em>Part of the world.</em></h1><p>Radio-frequency perception infrastructure.<br>A shared understanding of physical space<br class="desktop-break"> for machines and software.</p><a href="invention.html">Discover the thinking <span aria-hidden="true">↗</span></a></div>
-    <div class="intro-baseline"><span>Spatial intelligence, from the environment.</span><span>Built around a wider view.</span></div>
-  </section>
-  <div class="experience-canvas-wrap" aria-hidden="true">
-    <canvas id="experience-canvas"></canvas>
-    <div class="experience-grain"></div>
-    <div class="experience-shade"></div>
-    <div class="experience-loader" id="experience-loader"><span></span><em>Preparing the corridor</em></div>
-  </div>
-  
-  
-  
-  <div class="cockpit-radar" id="cockpit-radar" aria-label="In-car 360 degree RF environment screen">
-    <div class="radar-scope">
-      <i class="radar-ring r1"></i><i class="radar-ring r2"></i><i class="radar-ring r3"></i><i class="radar-cross x"></i><i class="radar-cross y"></i><i class="radar-sweep"></i>
-      <span class="radar-vehicle">▲</span>
-      <span class="radar-blip dog-one" data-label="DOG"></span><span class="radar-blip dog-two" data-label="DOG"></span>
-      <span class="radar-blip traffic-one" data-label="VEHICLE"></span><span class="radar-blip traffic-two" data-label="VEHICLE"></span>
-      <span class="radar-blip person" data-label="PEDESTRIAN"></span><span class="radar-blip building" data-label="STRUCTURE"></span>
-    </div>
-  </div>
-  <section class="experience-chapter experience-hero" data-scene-step="0">
-    <div class="chapter-copy chapter-copy-wide">
-      <h2>A wider view<br><em>starts here.</em></h2>
-      <p>A moving vehicle is one way to understand the idea. Its surroundings extend beyond what any single viewpoint can observe.</p>
-    </div>
-  </section>
+<!doctype html>
+<html lang="en">
 
-  <section class="experience-chapter align-right" id="blindspot" data-scene-step="1">
-    <div class="chapter-copy">
-      <h2>Every viewpoint<br>has <em>a boundary.</em></h2>
-      <p>A corner, a structure, another vehicle. Physical geometry limits the evidence available from one position.</p>
-    </div>
-  </section>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cosmic — World Engine.</title>
+  <meta name="description"
+    content="Cosmic is developing radio-frequency perception infrastructure: an AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cosmic">
+  <meta property="og:title" content="Cosmic — World Engine.">
+  <meta property="og:description"
+    content="Cosmic is developing radio-frequency perception infrastructure: an AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="assets/Cosmic%20icon.png">
+  <link rel="stylesheet" href="assets/site.css">
+  <script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script>
+</head>
 
-  <section class="experience-chapter" data-scene-step="2">
-    <div class="chapter-copy">
-      <h2>Let the environment<br><em>contribute.</em></h2>
-      <p>Spatially distributed RF nodes observe from different locations. Their observations can add context that a moving machine cannot gather alone.</p>
+<body data-scene="network">
+  <link rel="stylesheet" href="assets/experience.css">
+  <a class="home-wordmark" href="#top" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic"
+      fetchpriority="high"></a>
+  <header class="experience-nav">
+    <nav class="home-navigation" aria-label="Explore Cosmic"><a href="invention.html">Invention</a><a
+        href="infrastructure.html">Infrastructure</a>
+      <div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger">Implementation <span
+            class="nav-chevron">▾</span></a>
+        <div class="dropdown-menu"><a href="automotive.html">Automotive</a><a href="robotics.html">Robotics</a></div>
+      </div>
+    </nav>
+  </header>
+  <main class="experience-shell" id="experience">
+    <section class="brand-intro" id="top" aria-labelledby="intro-title">
+      <div class="intro-copy">
+        <h1 id="intro-title">RF Perception.<br><em>As infrastructure.</em></h1>
+        <p>An AI-generated, real-time world perception model that gives machines and software a shared understanding of
+          physical space.</p>
+        <a href="invention.html">Discover the thinking <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="intro-baseline"><span>Spatial intelligence, from the environment.</span><span>Built around a wider
+          view.</span></div>
+    </section>
+    <div class="experience-canvas-wrap" aria-hidden="true">
+      <canvas id="experience-canvas"></canvas>
+      <div class="experience-grain"></div>
+      <div class="experience-shade"></div>
+      <div class="experience-loader" id="experience-loader"><span></span><em>Preparing the corridor</em></div>
     </div>
-  </section>
 
-  <section class="experience-chapter align-right rf-chapter" data-scene-step="3">
-    <div class="chapter-copy">
-      <h2>From observations<br>to <em>understanding.</em></h2>
-      <p>This conceptual display brings estimated surroundings into a common spatial frame. A vehicle can use that context alongside its own observations.</p>
-    </div>
-  </section>
 
-  <section class="experience-chapter" data-scene-step="4">
-    <div class="chapter-copy">
-      <h2>Context includes<br><em>what is uncertain.</em></h2>
-      <p>The model is designed to retain confidence and the evidence behind its estimates. Where an interpretation is uncertain, further observations can help refine it.</p>
-      
-    </div>
-  </section>
 
-  <section class="experience-chapter experience-final align-right" data-scene-step="5">
-    <div class="chapter-copy">
-      <h2>Built around places.<br><em>Useful across systems.</em></h2>
-      <p>Mobility is one application. The wider idea is a physical-world perception layer that robotics, industrial operations, digital twins and AI can share.</p>
-      <div class="final-actions"><a href="invention.html">Explore the invention <span>↗</span></a><a href="infrastructure.html">View infrastructure <span>↗</span></a></div>
+    <div class="cockpit-radar" id="cockpit-radar" aria-label="In-car 360 degree RF environment screen">
+      <div class="radar-scope">
+        <i class="radar-ring r1"></i><i class="radar-ring r2"></i><i class="radar-ring r3"></i><i
+          class="radar-cross x"></i><i class="radar-cross y"></i><i class="radar-sweep"></i>
+        <span class="radar-vehicle">▲</span>
+        <span class="radar-blip dog-one" data-label="DOG"></span><span class="radar-blip dog-two"
+          data-label="DOG"></span>
+        <span class="radar-blip traffic-one" data-label="VEHICLE"></span><span class="radar-blip traffic-two"
+          data-label="VEHICLE"></span>
+        <span class="radar-blip person" data-label="PEDESTRIAN"></span><span class="radar-blip building"
+          data-label="STRUCTURE"></span>
+      </div>
     </div>
-    <div class="experience-footer"><span>© 2026 Cosmic</span><span>Radio-frequency perception infrastructure · Concept visualization</span></div>
-  </section>
-</main>
-<script src="assets/home-intro.js"></script><script type="module" src="assets/experience.js"></script>
-</body></html>
+    <section class="experience-chapter experience-hero" data-scene-step="0">
+      <div class="chapter-copy chapter-copy-wide">
+        <h2>A wider view<br><em>starts here.</em></h2>
+        <p>A moving vehicle is one way to understand the idea. Its surroundings extend beyond what any single viewpoint
+          can observe.</p>
+      </div>
+    </section>
+
+    <section class="experience-chapter align-right" id="blindspot" data-scene-step="1">
+      <div class="chapter-copy">
+        <h2>Every viewpoint<br>has <em>a boundary.</em></h2>
+        <p>A corner, a structure, another vehicle. Physical geometry limits the evidence available from one position.
+        </p>
+      </div>
+    </section>
+
+    <section class="experience-chapter" data-scene-step="2">
+      <div class="chapter-copy">
+        <h2>Let the environment<br><em>contribute.</em></h2>
+        <p>Spatially distributed RF nodes observe from different locations. Their observations can add context that a
+          moving machine cannot gather alone.</p>
+      </div>
+    </section>
+
+    <section class="experience-chapter align-right rf-chapter" data-scene-step="3">
+      <div class="chapter-copy">
+        <h2>From observations<br>to <em>understanding.</em></h2>
+        <p>This conceptual display brings estimated surroundings into a common spatial frame. A vehicle can use that
+          context alongside its own observations.</p>
+      </div>
+    </section>
+
+    <section class="experience-chapter" data-scene-step="4">
+      <div class="chapter-copy">
+        <h2>Context includes<br><em>what is uncertain.</em></h2>
+        <p>The model is designed to retain confidence and the evidence behind its estimates. Where an interpretation is
+          uncertain, further observations can help refine it.</p>
+
+      </div>
+    </section>
+
+    <section class="experience-chapter experience-final align-right" data-scene-step="5">
+      <div class="chapter-copy">
+        <h2>Built around places.<br><em>Useful across systems.</em></h2>
+        <p>Mobility is one application. The wider idea is a physical-world perception layer that robotics, industrial
+          operations, digital twins and AI can share.</p>
+        <div class="final-actions"><a href="invention.html">Explore the invention <span>↗</span></a><a
+            href="infrastructure.html">View infrastructure <span>↗</span></a></div>
+      </div>
+      <div class="experience-footer"><span>© 2026 Cosmic</span><span>Radio-frequency perception infrastructure · Concept
+          visualization</span></div>
+    </section>
+  </main>
+  <script src="assets/home-intro.js"></script>
+  <script type="module" src="assets/experience.js"></script>
+</body>
+
+</html>
