@@ -18,6 +18,7 @@ const mimeTypes = {
   '.jpg': 'image/jpeg',
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
+  '.pdf': 'application/pdf',
   '.ico': 'image/x-icon',
   '.glb': 'model/gltf-binary',
   '.gltf': 'model/gltf+json',

@@ -1,0 +1,87 @@
+const pdf='assets/documents/Cosmic-Full-Specification.pdf';
+const sub=(a,b)=>`<msub><mi>${a}</mi><mi>${b}</mi></msub>`;
+const fun=(name,args)=>`${name.includes('<')?name:`<mi>${name}</mi>`}<mo>(</mo>${args}<mo>)</mo>`;
+const math=(body,label)=>`<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="${label}"><mrow>${body}</mrow></math>`;
+const reference=(page,end=page)=>`<a class="equation-reference" href="${pdf}#page=${page}" target="_blank" rel="noopener">Complete specification · ${end===page?'p. '+page:'pp. '+page+'–'+end} ↗</a>`;
+const observation=math(`${fun(sub('Y','ij'),'<mi>t</mi>')}<mo>=</mo>${fun(sub('H','ij'),'<mi>t</mi>')}${fun(sub('X','i'),'<mi>t</mi>')}<mo>+</mo>${fun(sub('C','ij'),'<mi>t</mi>')}<mo>+</mo>${fun(sub('N','ij'),'<mi>t</mi>')}`,'Y ij of t equals H ij of t times X i of t plus C ij of t plus N ij of t');
+const inverse=math(`${sub('H','k')}<mo>∼</mo>${fun(sub('F','inv'),'<mi>Y</mi>')}`,'Candidate H k is proposed by the inverse model F inv of Y');
+const forward=math(`${fun('<mover><mi>Y</mi><mo>^</mo></mover>',`<mi>a</mi><mo>,</mo>${sub('H','k')}`)}<mo>=</mo>${fun(sub('F','EM'),`${sub('H','k')}<mo>,</mo><mi>a</mi>`)}`,'Predicted Y under configuration a and hypothesis H k equals the electromagnetic forward model');
+const residual=math(`${fun(sub('R','k'),'<mi>a</mi>')}<mo>=</mo>${fun('d',`${sub('Y','obs')}<mo>,</mo>${fun('<mover><mi>Y</mi><mo>^</mo></mover>',`<mi>a</mi><mo>,</mo>${sub('H','k')}`)}`)}`,'Residual R k compares the observed Y with the predicted response');
+const loss=math(`<mi>ℒ</mi><mo>=</mo>${sub('λ','r')}${sub('ℒ','RF')}<mo>+</mo>${sub('λ','g')}${sub('ℒ','geometry')}`,'Reconstruction loss: weighted RF and geometry consistency')+math(`<mo>+</mo>${sub('λ','t')}${sub('ℒ','temporal')}<mo>+</mo>${sub('λ','p')}${sub('ℒ','physics')}`,'Plus weighted temporal and physics consistency')+math(`<mo>+</mo>${sub('λ','s')}${sub('ℒ','semantic')}`,'Plus weighted semantic consistency');
+const state=math(`${fun('W','<mi>x</mi><mo>,</mo><mi>t</mi>')}<mo>=</mo><mo>{</mo><mi>G</mi><mo>,</mo><mi>M</mi><mo>,</mo><mi>O</mi><mo>,</mo><mi>K</mi><mo>,</mo><mi>C</mi><mo>,</mo><mi>U</mi><mo>,</mo><mi>P</mi><mo>,</mo><mi>H</mi><mo>}</mo>`,'World state contains geometry, material, occupancy, kinematics, confidence, uncertainty, provenance and hypotheses');
+const controller=math(`${sub('W','t')}<mo>→</mo>${sub('U','t')}<mo>→</mo>${sub('S','t+1')}<mo>→</mo>${sub('R','t+1')}<mo>→</mo>${sub('W','t+1')}`,'The world state informs uncertainty, subsequent sensing configuration, new observations and the next world state');
+
+export const inventionPage={
+ file:'invention.html',title:'The Invention',mode:'model',
+ desc:'The evolution of Cosmic from RF public-space awareness to a shared world perception layer, with the patent architecture and current proof-of-concept programme.',
+ heroTitle:'A place observes.<br><span class="accent">A world takes shape.</span>',
+ heroCopy:'From non-optical public-space awareness to perception as infrastructure. The invention brings radio-frequency observations, physical constraints and shared spatial intelligence into one evolving system.',
+ sceneLabel:'Conceptual multi-element antenna aperture with signal paths, illustrating the RF sensing foundation of the invention',
+ heroActions:`<div class="invention-hero-actions"><a href="#origin">Follow the evolution ↓</a><a href="${pdf}" download="Cosmic-Full-Specification.pdf">Download the specification ↗</a></div>`,
+ content:`
+ <link rel="stylesheet" href="assets/invention.css?v=20261002">
+ <section class="invention-origin content-reveal" id="origin">
+  <div class="invention-section-heading"><span class="auto-eyebrow">01 / The original question</span><h2>Understand the situation.<br><em>Reduce the need for imagery.</em></h2><p>The first question was rooted in public safety: could distributed RF infrastructure reconstruct a situation without making an optical image its primary representation?</p></div>
+  <div class="origin-comparison">
+   <article><span class="record-label">Provisional specification / April 2026</span><h3>SecureTower.</h3><p>A variable-geometry MIMO array, local signal conditioning and an edge-to-cloud reconstruction pipeline. The proposed emergency-response embodiment activated nearby towers after an SOS trigger and fused their observations into a spatial scene.</p><div class="record-tags"><span>Public-space awareness</span><span>RF-derived scene reconstruction</span><span>Event-triggered sensing</span></div><small>Source: provisional specification, pp. 1–4.</small></article>
+   <article><span class="record-label">Complete specification / September 2026</span><h3>A common perception layer.</h3><p>The architecture expands into a persistent RF Spatial World Model. Its observations retain source and timing information; alternate interpretations remain open; uncertainty guides the next sensing operation. Independent applications consume the resulting spatial state.</p><div class="record-tags"><span>Persistent world model</span><span>Physics-informed inference</span><span>Adaptive sensing</span></div><small>Source: complete specification, pp. 7–12, 32–55.</small></article>
+  </div>
+ </section>
+
+ <section class="invention-evolution content-reveal" aria-labelledby="evolution-title">
+  <div class="invention-section-heading"><span class="auto-eyebrow">02 / The change in architecture</span><h2 id="evolution-title">From a reconstructed scene<br><em>to a shared spatial state.</em></h2><p>Observation, interpretation and action form a loop. Explore the relationships that turn separate measurements into information other systems can use.</p></div>
+  <div class="invention-stage-controls" role="group" aria-label="Explore the reconstruction loop"><button type="button" data-invention-stage="0" aria-pressed="true">01 Observe</button><button type="button" data-invention-stage="1" aria-pressed="false">02 Interpret</button><button type="button" data-invention-stage="2" aria-pressed="false">03 Check</button><button type="button" data-invention-stage="3" aria-pressed="false">04 Adapt</button></div>
+  <div class="invention-evolution-map" data-stage="0" role="img" aria-label="Distributed RF nodes feed an observation graph, candidate hypotheses and a shared world model; uncertainty feeds back to subsequent sensing">
+   <svg viewBox="0 0 1000 360" aria-hidden="true"><defs><pattern id="invention-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="currentColor" opacity=".08"/></pattern></defs><rect width="1000" height="360" fill="url(#invention-grid)"/>
+    <g class="evidence-paths" fill="none" stroke="currentColor"><path d="M95 80 320 180M95 180H320M95 280 320 180"/><path class="flow-line" d="M320 180H550H810"/><path class="feedback-line" d="M810 225V315H320V215"/></g>
+    <g class="evidence-nodes" fill="currentColor"><circle cx="95" cy="80" r="7"/><circle cx="95" cy="180" r="7"/><circle cx="95" cy="280" r="7"/></g>
+    <g class="graph-nodes" stroke="currentColor" fill="none"><path d="M300 155 340 180 305 205 280 180 300 155 305 205"/><circle cx="300" cy="155" r="5"/><circle cx="340" cy="180" r="5"/><circle cx="305" cy="205" r="5"/><circle cx="280" cy="180" r="5"/></g>
+    <g class="hypothesis-shapes" stroke="currentColor" fill="none"><path d="M520 145 560 130 585 150 545 165ZM520 145V215L545 235V165M545 235 585 220V150"/><path stroke-dasharray="4 5" d="M555 145 595 130 620 150 580 165ZM555 145V215L580 235V165M580 235 620 220V150"/></g>
+    <g class="world-shape" stroke="currentColor" fill="none"><path d="M750 125 820 95 885 130 815 160ZM750 125V230L815 265V160M815 265 885 235V130"/><path d="M750 160 815 195 885 165M750 195 815 230 885 200M782 111V245M850 112V250"/></g>
+    <g fill="currentColor" class="map-labels"><text x="95" y="37" text-anchor="middle">RF NODES</text><text x="315" y="95" text-anchor="middle">OBSERVATION GRAPH</text><text x="560" y="95" text-anchor="middle">CANDIDATE STATES</text><text x="815" y="65" text-anchor="middle">WORLD MODEL</text><text x="540" y="340" text-anchor="middle">UNCERTAINTY → NEXT OBSERVATION</text></g>
+   </svg>
+  </div>
+  <p class="invention-stage-description" id="invention-stage-description">Observations retain transmitter, receiver, acquisition time and spatial relationships. Different positions contribute complementary evidence.</p>
+ </section>
+
+ <section class="invention-journey content-reveal" id="journey">
+  <div class="invention-section-heading"><span class="auto-eyebrow">03 / The research journey</span><h2>An architecture developed<br><em>over time.</em></h2><p>Physics, systems research and a path toward manufacturing shaped the transition from a public-safety concept into a broader perception infrastructure.</p></div>
+  <ol class="invention-milestones">
+   <li><span class="milestone-date">18+ months</span><div><h3>Physics before a product.</h3><p>Full-time research began with the sensing physics and system architecture. Roughly the first year included discussions with senior academics and researchers with telecom, aerospace and RF experience.</p></div></li>
+   <li><span class="milestone-date">8 April 2026</span><div><h3>The provisional foundation.</h3><p>The provisional specification formalized variable-geometry MIMO sensing, distributed SecureTowers and RF-based reconstruction for situational awareness.</p></div></li>
+   <li><span class="milestone-date">September 2026</span><div><h3>Perception as infrastructure.</h3><p>The complete specification develops a persistent world-model architecture. The founder reports filing the specification and publication of the application in the Indian Patent Journal.</p></div></li>
+   <li><span class="milestone-date">In parallel</span><div><h3>A route toward hardware.</h3><p>Engagement with specialized RF hardware manufacturers in China and Taiwan explores the manufacturability and production requirements of custom RF, synchronization and distributed-compute infrastructure.</p></div></li>
+   <li class="milestone-current"><span class="milestone-date">Now / Proof of concept</span><div><h3>Make the reconstruction measurable.</h3><p>The core AI and physics inference architecture is being developed through training-data generation and model iteration. The next test is an end-to-end RF-observation-to-world-model demonstration.</p></div></li>
+  </ol><p class="invention-source-note">Development and publication milestones reflect the founder’s account. The supplied provisional specification is dated 8 April 2026.</p>
+ </section>
+
+ <section class="invention-mathematics content-reveal" id="mathematics">
+  <div class="invention-section-heading"><span class="auto-eyebrow">04 / Inside the inference architecture</span><h2>Every interpretation<br><em>answers to the evidence.</em></h2><p>The complete specification treats reconstruction as an inverse problem. Learned models propose spatial states; physical models predict their RF responses; consistency checks update the alternatives.</p></div>
+  <div class="invention-equation-grid">
+   <article class="invention-equation-card"><span class="record-label">01 / The measurement</span><h3>A response shaped by the environment.</h3><div class="patent-equation">${observation}</div><p>For transmitter <i>i</i> and receiver <i>j</i>, the known signal <i>X</i> is modified by the environment response <i>H</i>. Interference <i>C</i> and noise <i>N</i> are retained in the observation model.</p>${reference(20,21)}</article>
+   <article class="invention-equation-card"><span class="record-label">02 / Proposal and prediction</span><h3>Work in both directions.</h3><div class="patent-equation equation-pair">${inverse}${forward}</div><p>The inverse model proposes candidate state <i>Hₖ</i>. The electromagnetic forward model predicts what an interrogation configuration <i>a</i> would observe if that candidate were correct.</p>${reference(40,41)}</article>
+   <article class="invention-equation-card"><span class="record-label">03 / The consistency check</span><h3>Compare prediction with observation.</h3><div class="patent-equation">${residual}</div><p>The discrepancy <i>Rₖ</i> informs whether a hypothesis is strengthened, weakened, retained or rejected. Cross-node geometry, temporal behavior and physical constraints also contribute to the update.</p>${reference(41,44)}</article>
+   <article class="invention-equation-card"><span class="record-label">04 / The reconstruction objective</span><h3>Several constraints. One reconstruction.</h3><div class="patent-equation">${loss}</div><p>RF agreement is evaluated alongside geometry, temporal continuity, physics and semantics. The weights <i>λ</i> depend on the reconstruction task.</p>${reference(41)}</article>
+  </div>
+  <div class="invention-state-panel"><div><span class="record-label">05 / The persistent representation</span><h3>More than a 3D shape.</h3><div class="patent-equation">${state}</div><p>The world model keeps the supporting evidence and alternative hypotheses alongside the reconstructed spatial state.</p>${reference(46,47)}</div><dl class="state-key"><div><dt>G</dt><dd>Geometry</dd></div><div><dt>M</dt><dd>Material / scattering</dd></div><div><dt>O</dt><dd>Occupancy</dd></div><div><dt>K</dt><dd>Kinematics</dd></div><div><dt>C</dt><dd>Confidence</dd></div><div><dt>U</dt><dd>Uncertainty</dd></div><div><dt>P</dt><dd>Observation provenance</dd></div><div><dt>H</dt><dd>Candidate hypotheses</dd></div></dl></div>
+  <article class="invention-feedback-panel"><div><span class="record-label">06 / The adaptive loop</span><h3>What remains uncertain<br>guides what comes next.</h3><p>Uncertainty <i>Uₜ</i> informs the next sensing configuration <i>Sₜ₊₁</i>. A different node, transmitter–receiver pairing, spectral layer or waveform can provide the evidence needed to distinguish surviving hypotheses.</p>${reference(48,49)}</div><div class="patent-equation">${controller}<span class="equation-caption">World state → uncertainty → sensing → observations → updated state</span></div></article>
+ </section>
+
+ <section class="invention-poc content-reveal" id="proof-of-concept">
+  <div class="invention-section-heading"><span class="auto-eyebrow">05 / From architecture to evidence</span><h2>Build the loop.<br><em>Measure the reconstruction.</em></h2><p>The current proof-of-concept programme uses CARLA and NVIDIA Sionna to connect physical scenes, RF ray-tracing and model inference. LiDAR provides a reference against which reconstructed geometry can be evaluated.</p></div>
+  <div class="poc-main-flow" aria-label="Simulation to reconstruction pipeline"><article><b>01</b><h3>CARLA</h3><p>Physical scenes and motion</p></article><article><b>02</b><h3>NVIDIA Sionna</h3><p>RF ray-tracing and observations</p></article><article><b>03</b><h3>AI + physics inference</h3><p>Candidate generation and consistency</p></article><article><b>04</b><h3>Reconstructed world</h3><p>3D spatial state and uncertainty</p></article></div>
+  <div class="poc-reference-flow"><span>CARLA / LiDAR ground truth</span><i aria-hidden="true">→</i><span>Reference comparison</span><i aria-hidden="true">←</i><span>Reconstructed geometry</span></div>
+  <p class="invention-source-note">LiDAR is a reference for evaluation in this simulation programme; it is separate from the RF reconstruction input.</p>
+  <div class="invention-next-milestones"><article><span class="record-label">Next</span><h3>End-to-end proof.</h3><p>Complete the proof of concept and demonstrate RF observations being converted into a reconstructed three-dimensional world model.</p></article><article><span class="record-label">Then</span><h3>Benchmark the model.</h3><p>Compare the reconstruction against an NVIDIA Omniverse-based digital-twin pipeline.</p></article><article><span class="record-label">After</span><h3>Move into the physical world.</h3><p>Develop synchronized RF hardware prototypes and proceed toward a real-world deployment.</p></article></div>
+ </section>
+
+ <section class="invention-patent-record content-reveal" id="patent-record">
+  <div><span class="auto-eyebrow">06 / Read the technical record</span><h2>The specification.<br><em>In full.</em></h2><p>A Radio-Frequency Perception-as-Infrastructure System and Method for Distributed Three-Dimensional Spatial World Model Generation.</p><a class="specification-download" href="${pdf}" download="Cosmic-Full-Specification.pdf">Download the full specification <span>PDF · 95 pages ↗</span></a></div>
+  <div class="invention-patent-card"><span class="record-label">Indian patent application number</span><code id="patent-application-number">202641045220</code><button type="button" id="copy-patent-number">Copy application number</button><p>Open the Indian Patent Search portal and enter <strong>202641045220</strong>. Review the official filing and publication record, and return to follow the application’s progress.</p><a href="https://iprsearch.ipindia.gov.in/PublicSearch/PublicationSearch/ApplicationStatus" target="_blank" rel="noopener noreferrer">Open Indian Patent Search ↗</a><span id="patent-copy-status" role="status" aria-live="polite"></span></div>
+ </section>
+ <script type="module" src="assets/invention.js?v=20261002"></script>
+ `,
+ nextTitle:'From the invention<br>to <em>shared intelligence.</em>',
+ nextText:'Explore how the architecture represents geometry, motion, confidence and the evidence behind its estimates.',
+ nextHref:'intelligence.html',nextLink:'Explore Intelligence'
+};

@@ -1,0 +1,10 @@
+.intelligence-scene-ready>.scene-fallback{display:none}
+.subsite-scene.scene-ready>.scene-fallback{display:none}
+.subsite-scene.scene-ready::before,.subsite-scene.scene-ready::after{content:none}
+.scene-annotation{position:absolute;z-index:3;left:3%;bottom:2.2rem;max-width:21rem;pointer-events:none;border-left:1px solid rgba(37,74,64,.46);padding:.3rem 0 .35rem .95rem;color:var(--ink);background:linear-gradient(90deg,rgba(241,240,232,.74),transparent)}
+.scene-annotation span{display:block;font:600 .58rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.2em;color:var(--accent)}
+.scene-annotation p{font-size:.73rem!important;line-height:1.5!important;margin-top:.38rem!important;max-width:18rem;color:var(--muted)!important}
+@media(max-width:760px){.scene-annotation{left:5%;bottom:1.2rem;max-width:72%;padding-left:.65rem}.scene-annotation p{font-size:.64rem!important}}
+@media(max-width:600px){.subsite-nav nav{justify-content:flex-start;gap:1.2rem;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:none}.subsite-nav nav::-webkit-scrollbar{display:none}.subsite-nav nav>a,.subsite-nav .nav-dropdown{flex:none}}
+.company-contact-link{display:inline-flex;align-items:center;justify-content:space-between;gap:2rem;border:1px solid var(--accent);padding:1.25rem 1.5rem;min-width:min(100%,20rem);font-size:.8rem;color:var(--ink);text-decoration:none;transition:background .2s,color .2s}
+.company-contact-link:hover{background:var(--ink);color:var(--paper)}

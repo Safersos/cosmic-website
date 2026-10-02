@@ -1,0 +1,42 @@
+.mobility-research,.mobility-route,.mobility-safety{padding:6rem 9vw;border-top:1px solid var(--line)}
+.mobility-heading{max-width:900px;margin-bottom:3rem}
+.mobility-heading h2,.mobility-safety h2{margin:.8rem 0 1.6rem}
+.mobility-research p,.mobility-route p,.mobility-safety p{font-size:.95rem;line-height:1.85;color:var(--muted);max-width:760px}
+.mobility-research a,.mobility-route a,.mobility-safety a{color:var(--accent);text-underline-offset:4px}
+.mobility-label{display:block;font:.62rem/1.7 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.mobility-research h3,.mobility-route h3,.mobility-safety h3{font-size:clamp(1.6rem,2.1vw,2.25rem);line-height:1.12;font-weight:400;letter-spacing:-.03em;margin:1rem 0 1.4rem}
+.mobility-research-grid,.mobility-viewpoints{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.mobility-research-grid article,.mobility-viewpoints article{border:1px solid var(--line);padding:2.2rem;min-width:0}
+.mobility-shared-card,.mobility-safety-panel{background:#e9ede2}
+.mobility-editorial-note{border-top:1px solid var(--line);padding-top:1rem;font-size:.8rem!important}
+.mobility-compute-flow{display:flex;flex-direction:column;align-items:center;gap:.65rem;margin:2rem 0;text-align:center;font-size:.8rem}
+.mobility-compute-flow span,.mobility-compute-flow strong{border:1px solid var(--line);padding:.8rem 1.3rem;width:100%;font-weight:400}
+.mobility-compute-flow strong{background:var(--ink);color:var(--paper)}
+.mobility-compute-flow i{font-style:normal;color:var(--accent)}
+.mobility-source{display:block;font-size:.72rem;line-height:1.7;margin:1.4rem 0 0}
+.mobility-retrofit{display:grid;grid-template-columns:1fr 1fr;gap:4rem;border-top:1px solid var(--line);padding-top:3.5rem;margin-top:3.5rem}
+.mobility-retrofit h3{font-size:clamp(2rem,3vw,3rem)}
+.mobility-retrofit-steps{list-style:none;padding:0;margin:0}
+.mobility-retrofit-steps li{padding:1.4rem 0;border-bottom:1px solid var(--line)}
+.mobility-retrofit-steps b{display:block;font:.65rem/1.7 ui-monospace,Consolas,monospace;letter-spacing:.1em;color:var(--accent);margin-bottom:.75rem}
+.mobility-retrofit-steps span{font-size:.87rem;line-height:1.8;color:var(--muted)}
+.mobility-route-controls{display:flex;flex-wrap:wrap;gap:.65rem;margin-bottom:1.5rem}
+.mobility-route-controls button{font:inherit;font-size:.74rem;border:1px solid var(--line);padding:.85rem 1.1rem;border-radius:30px;background:transparent;color:var(--ink);cursor:pointer}
+.mobility-route-controls button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.mobility-route-controls button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.mobility-route-map{overflow-x:auto;border:1px solid var(--line)}
+.mobility-route-map svg{display:block;width:100%;min-width:620px;height:auto}
+.road-map-labels,.road-hidden-user text{font:10px ui-monospace,Consolas,monospace;letter-spacing:.7px}
+.road-route-line{stroke-dasharray:7 7;animation:road-data-flow 6s linear infinite}
+.road-vehicle{transform:translate(145px,320px);transition:transform 1.2s cubic-bezier(.4,0,.2,1)}
+[data-road-state="1"] .road-vehicle{transform:translate(480px,320px)}
+[data-road-state="2"] .road-vehicle{transform:translate(855px,120px)}
+.road-hidden-user{opacity:.45;transition:opacity .5s}
+[data-road-state="1"] .road-hidden-user{opacity:1}
+.mobility-route-status{padding:1.4rem 0 2.5rem;min-height:150px}
+.mobility-route-status p{margin:.65rem 0 0;max-width:900px}
+.mobility-safety{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.mobility-safety-panel{padding:2.2rem;align-self:start;border:1px solid var(--line)}
+@keyframes road-data-flow{to{stroke-dashoffset:-84}}
+@media(max-width:760px){.mobility-research,.mobility-route,.mobility-safety{padding:4rem 7vw}.mobility-heading{margin-bottom:2rem}.mobility-research-grid,.mobility-viewpoints,.mobility-retrofit,.mobility-safety{grid-template-columns:1fr;gap:1.6rem}.mobility-research-grid article,.mobility-viewpoints article,.mobility-safety-panel{padding:1.5rem}.mobility-retrofit{padding-top:2.5rem;margin-top:2.5rem}.mobility-route-controls button{font-size:.68rem;padding:.75rem .9rem}.mobility-route-status{min-height:180px}.mobility-safety{gap:2rem}}
+@media(prefers-reduced-motion:reduce){.road-route-line{animation:none}.road-vehicle,.road-hidden-user{transition:none}}

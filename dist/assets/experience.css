@@ -1529,3 +1529,9 @@ body.journey-entered header.experience-nav {
         width: min(48vw, 190px)
     }
 }
+/* A return brightens when the sweep crosses it; the scene drives the decay. */
+.radar-blip{animation:none;opacity:var(--scan-return,.35)}
+.radar-blip.robot-one{left:67%;top:32%;border-radius:2px;border-color:#a5f9ff}
+.radar-blip.machine-one{left:30%;top:66%;width:8px;border-radius:1px}
+.radar-blip.tree-one{left:76%;top:72%;border-color:#b8ffd8;box-shadow:0 0 9px #b8ffd8}
+.nav-pilot{margin-left:1.2rem;padding:.7rem 1rem!important;border:1px solid currentColor!important;border-radius:999px;white-space:nowrap}.experience-footer a{color:inherit;text-decoration:none}.experience-footer a:hover{text-decoration:underline}@media(max-width:980px){.home-navigation{gap:14px}.home-navigation a,.home-navigation .dropdown-trigger{font-size:10px}.nav-pilot{display:none}}@media(max-width:760px){.home-navigation{display:none}}

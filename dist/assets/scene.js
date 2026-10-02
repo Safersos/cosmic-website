@@ -1,4 +1,6 @@
 import * as T from './three.module.js';
+import {pageScene} from './page-scenes-v2.js?v=20261002-intelligence';
+import {TravelMotion} from './travel-motion.js';
 import {RoomEnvironment} from './addons/environments/RoomEnvironment.js';
 
 const canvas = document.querySelector('#rf-scene');
@@ -71,7 +73,27 @@ function worldModel(root) {
 function infrastructure(root) {
  const terrain=mesh(root,new T.CylinderGeometry(6.9,7.1,.2,6),mat(0xd0d9c7),0,-.2,0);
  terrain.rotation.y=Math.PI/6;
- const grid=new T.GridHelper(12,20,palette.ink,palette.teal);grid.position.y=-.07;grid.material.transparent=true;grid.material.opacity=.13;root.add(grid);
+ // Clip the reference grid to the actual hexagonal surface, rather than
+ // overlaying a second square plane that spills beyond the terrain.
+ const boundary=Array.from({length:6},(_,i)=>{
+  const angle=i*Math.PI/3+terrain.rotation.y;
+  return [Math.sin(angle)*6.9,Math.cos(angle)*6.9];
+ });
+ const gridPoints=[];
+ for(const axis of [0,1])for(let coordinate=-6.6;coordinate<=6.6;coordinate+=.6){
+  const intersections=[];
+  boundary.forEach((a,i)=>{
+   const b=boundary[(i+1)%6],delta=b[axis]-a[axis];
+   if(Math.abs(delta)<1e-8)return;
+   const u=(coordinate-a[axis])/delta;
+   if(u>=0&&u<=1)intersections.push(a[1-axis]+u*(b[1-axis]-a[1-axis]));
+  });
+  if(intersections.length<2)continue;
+  const low=Math.min(...intersections),high=Math.max(...intersections);
+  gridPoints.push(axis===0?new T.Vector3(coordinate,-.085,low):new T.Vector3(low,-.085,coordinate),axis===0?new T.Vector3(coordinate,-.085,high):new T.Vector3(high,-.085,coordinate));
+ }
+ const grid=new T.LineSegments(new T.BufferGeometry().setFromPoints(gridPoints),lineMat(palette.teal,.13));
+ grid.name='infrastructure-surface-grid';root.add(grid);
  const locations=[[-3.8,-2.1],[-.5,-3.7],[3.4,-2.1],[3.7,2.2],[0,3.6],[-3.8,2]];
  const nodes=[],packets=[];
  locations.forEach(([x,z],i)=>{
@@ -127,9 +149,12 @@ function automotive(root) {
   mesh(car,new T.BoxGeometry(.035,.035,.25),mat(0x5c7669,.25,.7),side*1.035,.59,.25);
   const mirror=mesh(car,new T.SphereGeometry(.12,16,12),mat(0xcbd4c2,.3,.35),side*1.04,.7,-.76);mirror.scale.set(1,.48,.72);
  }
+ const wheels=[];
  for(const x of [-1,1])for(const z of [-1.35,1.35]){
-  const tire=mesh(car,new T.CylinderGeometry(.38,.38,.23,32),mat(0x1e302b),x,.34,z);tire.rotation.z=Math.PI/2;
-  const hub=mesh(car,new T.CylinderGeometry(.23,.23,.242,24),mat(0x8b9f8c,.3,.65),x,.34,z);hub.rotation.z=Math.PI/2;
+  const wheel=new T.Group();wheel.position.set(x,.34,z);car.add(wheel);wheels.push(wheel);
+  const tire=mesh(wheel,new T.CylinderGeometry(.38,.38,.23,32),mat(0x1e302b));tire.rotation.z=Math.PI/2;
+  const hub=mesh(wheel,new T.CylinderGeometry(.23,.23,.242,24),mat(0x8b9f8c,.3,.65));hub.rotation.z=Math.PI/2;
+  for(let i=0;i<5;i++){const a=i*Math.PI*2/5;const spoke=mesh(wheel,new T.BoxGeometry(.018,.18,.035),mat(0x40534b,.3,.5),x>0?.13:-.13,Math.cos(a)*.115,Math.sin(a)*.115);spoke.rotation.x=a;}
  }
  for(const x of [-.62,.62]){
   mesh(car,new T.BoxGeometry(.43,.05,.035),new T.MeshBasicMaterial({color:0xfff3d6}),x,.61,-2.25);
@@ -161,13 +186,16 @@ function automotive(root) {
  });
  // Illustrative observation paths originate at the actual RF node heads.
  const signalPaths=[];
+ const carSignalAnchor=new T.Vector3(0,1.12,0);
  nodePositions.slice(0,1).forEach(([x,z])=>{
   const source=new T.Vector3(x,2.45,z);
-  const destination=new T.Vector3(-.8,.5,2.6);
+  const destination=new T.Vector3();
+  context.worldToLocal(car.localToWorld(destination.copy(carSignalAnchor)));
   const curve=new T.LineCurve3(source,destination);
-  line(context,curve.getPoints(2),palette.teal,.65);
+  const beam=line(context,[source,destination],palette.teal,.65);
+  beam.name='vehicle-rf-link';
   const pulse=mesh(context,new T.SphereGeometry(.065,8,6),new T.MeshBasicMaterial({color:palette.teal,wireframe:true}));
-  signalPaths.push({curve,pulse});
+  signalPaths.push({curve,beam,pulse});
  });
  const sight=new T.Shape();sight.moveTo(0,0);sight.lineTo(-1.5,4.1);sight.quadraticCurveTo(0,4.8,1.5,4.1);sight.closePath();
  const cone=mesh(root,new T.ShapeGeometry(sight),new T.MeshBasicMaterial({color:0xf5f6df,side:T.DoubleSide,transparent:true,opacity:.3,depthWrite:false}),-.8,.01,2.6);cone.rotation.x=-Math.PI/2;
@@ -175,10 +203,12 @@ function automotive(root) {
  const optical=[],rfEdges=[];
  root.traverse(object=>{
   let inContext=false;
+  let inCar=false;
   for(let parent=object;parent;parent=parent.parent)if(parent===context)inContext=true;
-  if(!inContext&&(object.isMesh||object.isLine))optical.push(object);
+  for(let parent=object;parent;parent=parent.parent)if(parent===car)inCar=true;
+  if(!inContext&&!inCar&&(object.isMesh||object.isLine))optical.push(object);
  });
- optical.filter(o=>o.isMesh&&o!==cone&&o.parent!==car).forEach(object=>{
+ optical.filter(o=>o.isMesh&&o!==cone).forEach(object=>{
   const edge=new T.LineSegments(new T.EdgesGeometry(object.geometry,22),lineMat(palette.ink,.65));
   edge.position.copy(object.position);edge.rotation.copy(object.rotation);edge.scale.copy(object.scale);
   object.parent.add(edge);rfEdges.push(edge);
@@ -242,23 +272,50 @@ function automotive(root) {
   if(caption)caption.textContent=shared?'RF spatial view — geometry and observation lines.':'The vehicle observes from its own position.';
  }));
  root.rotation.y=-.12;
+ const drivingMotion=new TravelMotion(car.position.z,{maxSpeed:.62,acceleration:.42,braking:.58,response:4});
+ let lastTime=0;
  return {camera:[15,15,19],look:[0,.3,0],update(t){
+  const dt=Math.max(0,Math.min(t-lastTime,.05));lastTime=t;
+  const distance=drivingMotion.advance(-1.6,dt);
+  car.position.z=drivingMotion.position;rfCar.position.z=car.position.z;
+  wheels.forEach(wheel=>wheel.rotation.x+=distance/(.38*.58));
   waves.forEach((r,i)=>{const p=(t*.13+i*.27)%1;r.scale.setScalar(.8+p*.45);r.material.opacity=.28*(1-p)});
-  signalPaths.forEach(({curve,pulse},i)=>pulse.position.copy(curve.getPoint((t*.32+i*.4)%1)));
+  signalPaths.forEach(({curve,beam,pulse},i)=>{
+   // Both objects use context-local coordinates, even if the scene is rotated/scaled.
+   context.worldToLocal(car.localToWorld(curve.v2.copy(carSignalAnchor)));
+   const positions=beam.geometry.attributes.position;
+   positions.setXYZ(1,curve.v2.x,curve.v2.y,curve.v2.z);positions.needsUpdate=true;
+   beam.geometry.computeBoundingSphere();
+   curve.getPoint((t*.32+i*.4)%1,pulse.position);
+  });
  }};
 }
 try {
  const renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});
+ renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
  renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.25:1.6));renderer.setClearColor(0,0);
  renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;
  const scene=new T.Scene();scene.add(new T.HemisphereLight(0xfaffea,0x355949,2.4));
  const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(renderer);
  const envTarget=pmrem.fromScene(environment,.04);scene.environment=envTarget.texture;environment.dispose();pmrem.dispose();
  const key=new T.DirectionalLight(0xfff5df,3);key.position.set(-7,12,8);scene.add(key);
+ key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-11;key.shadow.camera.right=11;key.shadow.camera.top=11;key.shadow.camera.bottom=-11;key.shadow.normalBias=.025;key.shadow.radius=3;
  const rim=new T.DirectionalLight(0xc1e7d1,1.5);rim.position.set(6,4,-6);scene.add(rim);
  const root=new T.Group();scene.add(root);
- const design=({model:worldModel,network:infrastructure,vehicle:automotive}[mode]||worldModel)(root);
- canvas.dataset.design=mode;
+ const page=location.pathname.split('/').pop().replace('.html','');
+ const annotations={
+  intelligence:['01 / DISTRIBUTED EVIDENCE','RF observations retain transmitter, receiver and spatial relationships.'],
+  'world-model':['02 / SPATIAL STATE','Geometry, occupancy and motion in one frame'],
+  applications:['03 / SHARED CONTEXT','One site, multiple consuming systems'],
+  invention:['04 / SENSING APERTURE','An array of receiving elements and phase paths'],
+  research:['05 / MODEL VALIDATION','Reference geometry and reconstructed estimate'],
+  robotics:['06 / INDUSTRIAL CELL','Environmental context around a robot workspace'],
+  company:['07 / DEPLOYMENT CONCEPT','Distributed observers across a shared environment']
+ };
+ let sceneNote=null;
+ if(annotations[page]){const note=document.createElement('div');note.className='scene-annotation';const [label,description]=annotations[page];note.innerHTML='<span></span><p></p>';note.querySelector('span').textContent=label;note.querySelector('p').textContent=description;host.append(note);sceneNote=note;}
+ const design=pageScene(page,root)||({network:infrastructure,vehicle:automotive}[mode]||worldModel)(root);
+ canvas.dataset.design=page;
  const camera=new T.PerspectiveCamera(36,1,.1,100),base=new T.Vector3(...design.camera),look=new T.Vector3(...design.look);
  let px=0,py=0,active=true,first=true,time=0,last=performance.now();
  if(!reduced)host.addEventListener('pointermove',e=>{const r=host.getBoundingClientRect();px=(e.clientX-r.left)/r.width-.5;py=(e.clientY-r.top)/r.height-.5},{passive:true});
@@ -271,17 +328,23 @@ try {
  new ResizeObserver(size).observe(host);size();
  const target=new T.Vector3();
  function frame(now){
-  requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;
-  if(!active||document.hidden)return;
+  requestAnimationFrame(frame);const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;
+  if(!active||document.hidden||renderer.getContext().isContextLost())return;
   if(!reduced)time+=dt;
   design.update(time);
+  if(sceneNote&&design.status&&sceneNote.querySelector('span').textContent!==design.status[0]){
+   sceneNote.querySelector('span').textContent=design.status[0];sceneNote.querySelector('p').textContent=design.status[1];
+  }
   target.copy(base);target.x+=px*.7;target.y+=py*.5;
   camera.position.lerp(target,first?1:1-Math.exp(-dt*4));first=false;camera.lookAt(look);
   renderer.render(scene,camera);canvas.dataset.ready='true';
+  host.classList.add('scene-ready');
+  if(page==='intelligence')host.classList.add('intelligence-scene-ready');
+  if(page==='invention')host.classList.add('invention-scene-ready');
  }
  requestAnimationFrame(frame);
- canvas.addEventListener('webglcontextlost',()=>host.classList.add('scene-fallback'));
-}catch(error){canvas.hidden=true;host.classList.add('scene-fallback');console.error('Scene unavailable',error)}
+ canvas.addEventListener('webglcontextlost',()=>{host.classList.remove('scene-ready','intelligence-scene-ready','invention-scene-ready');host.classList.add('scene-fallback')});
+}catch(error){canvas.hidden=true;host.classList.remove('scene-ready','intelligence-scene-ready','invention-scene-ready');host.classList.add('scene-fallback');console.error('Scene unavailable',error)}
 
 
 

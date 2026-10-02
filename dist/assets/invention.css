@@ -1,0 +1,81 @@
+/* The invention uses the site's existing paper, serif and green palette. */
+body[data-scene="model"] .invention-page .subsite-hero{height:1080px}
+.invention-hero-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:1rem 2rem;margin:1.7rem auto 0}
+.invention-hero-actions a,.invention-context-link{font-size:.78rem;letter-spacing:.035em;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line);padding:.5rem 0}
+.invention-hero-actions a:hover,.invention-context-link:hover{border-color:var(--accent)}
+.invention-origin,.invention-evolution,.invention-journey,.invention-mathematics,.invention-poc,.invention-patent-record{padding:6.5rem 9vw;border-top:1px solid var(--line)}
+.invention-section-heading{max-width:850px;margin-bottom:3rem}
+.invention-section-heading h2{margin:.9rem 0 1.6rem}
+.invention-page p{color:var(--muted);font-size:.96rem;line-height:1.85;max-width:720px}
+.invention-page .auto-eyebrow,.record-label{display:block;font:.62rem/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.invention-page h3{font:400 1.75rem/1.2 Georgia,serif;letter-spacing:-.035em;margin:.9rem 0 1.1rem}
+.origin-comparison{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.origin-comparison article{padding:2.2rem;background:rgba(255,255,255,.25);border:1px solid var(--line)}
+.origin-comparison article:last-child{border-top:2px solid var(--accent)}
+.origin-comparison h3{font-size:2.6rem}
+.record-tags{display:flex;gap:.55rem;flex-wrap:wrap;margin:1.6rem 0}
+.record-tags span{font-size:.64rem;border:1px solid var(--line);padding:.4rem .7rem;color:var(--accent);border-radius:999px}
+.origin-comparison small,.invention-source-note{display:block;color:var(--muted);font-size:.72rem!important;line-height:1.7!important}
+.invention-evolution{background:rgba(214,230,216,.16)}
+.invention-stage-controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.5rem}
+.invention-stage-controls button{font:inherit;font-size:.76rem;color:var(--ink);background:none;border:1px solid var(--line);padding:.8rem 1.15rem;border-radius:999px;cursor:pointer}
+.invention-stage-controls button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.invention-stage-controls button:focus-visible,.invention-patent-card button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.invention-evolution-map{overflow-x:auto;border:1px solid var(--line);color:var(--accent);background:rgba(255,255,255,.15)}
+.invention-evolution-map svg{display:block;width:100%;min-width:680px;max-height:420px}
+.map-labels{font:13px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.4px}
+.evidence-paths{stroke-width:1.5;opacity:.4}
+.flow-line{stroke-dasharray:8 7;animation:invention-flow 5s linear infinite}
+.feedback-line{stroke-dasharray:4 6;opacity:.25}
+.evidence-nodes,.graph-nodes,.hypothesis-shapes,.world-shape{opacity:.3;transition:opacity .35s}
+.invention-evolution-map[data-stage="0"] .evidence-nodes,.invention-evolution-map[data-stage="1"] .graph-nodes,.invention-evolution-map[data-stage="1"] .hypothesis-shapes,.invention-evolution-map[data-stage="2"] .hypothesis-shapes,.invention-evolution-map[data-stage="2"] .world-shape,.invention-evolution-map[data-stage="3"] .world-shape{opacity:1}
+.invention-evolution-map[data-stage="3"] .feedback-line{opacity:1;stroke:#977952;animation:invention-flow 4s linear infinite}
+.invention-stage-description{min-height:3.7rem;margin-top:1.4rem;max-width:850px!important}
+.invention-milestones{padding:0;margin:0;list-style:none}
+.invention-milestones li{display:grid;grid-template-columns:220px 1fr;gap:3rem;position:relative;border-top:1px solid var(--line);padding:2rem 0 2rem 1.7rem}
+.invention-milestones li:before{content:'';position:absolute;left:0;top:2.35rem;width:7px;height:7px;background:var(--accent);border-radius:50%}
+.milestone-date{font:.7rem/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent);letter-spacing:.08em}
+.invention-milestones h3{margin:0 0 .75rem}
+.milestone-current{background:linear-gradient(90deg,rgba(214,230,216,.4),transparent);border-bottom:1px solid var(--line)}
+.invention-journey>.invention-source-note{margin-top:1.7rem}
+.invention-equation-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
+.invention-equation-card{padding:2.1rem;border:1px solid var(--line);min-width:0;background:rgba(255,255,255,.2)}
+.patent-equation{max-width:100%;overflow-x:auto;padding:1.4rem 0;color:var(--accent)}
+.patent-equation math{font-size:1.38rem;width:max-content;min-width:100%;margin:.35rem 0;text-align:left}
+.equation-pair{display:grid;gap:.85rem}
+.equation-reference{display:inline-block;color:var(--accent);font-size:.68rem;text-decoration:none;border-bottom:1px solid var(--line);padding:.4rem 0;margin-top:1rem}
+.equation-reference:hover{border-color:var(--accent)}
+.invention-state-panel,.invention-feedback-panel{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:3rem;margin-top:2rem;padding:2.5rem;background:rgba(214,230,216,.26);border:1px solid var(--line);min-width:0}
+.invention-state-panel>div,.invention-feedback-panel>div{min-width:0}
+.state-key{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.state-key div{display:flex;align-items:center;gap:.8rem;border-bottom:1px solid var(--line);padding:.6rem 0}
+.state-key dt{font:italic 1.4rem Georgia,serif;color:var(--accent);width:1.2rem}
+.state-key dd{margin:0;font-size:.76rem;line-height:1.5;color:var(--muted)}
+.equation-caption{display:block;font-size:.71rem;line-height:1.7;color:var(--muted);margin-top:1rem}
+.poc-main-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.poc-main-flow article{padding:1.7rem 1.35rem;border-top:2px solid var(--accent);background:rgba(255,255,255,.25);position:relative}
+.poc-main-flow b{font:.65rem ui-monospace,monospace;color:var(--accent)}
+.poc-main-flow h3{font-size:1.4rem}
+.poc-main-flow p{font-size:.78rem}
+.poc-reference-flow{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.4rem;margin-top:1rem;border:1px dashed var(--line);font-size:.75rem;line-height:1.6;color:var(--accent)}
+.poc-reference-flow i{font-style:normal;font-size:1.3rem}
+.invention-poc>.invention-source-note{margin-top:1.2rem}
+.invention-next-milestones{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3.5rem}
+.invention-next-milestones article{padding-top:1.4rem;border-top:1px solid var(--line)}
+.invention-next-milestones h3{font-size:1.6rem}
+.invention-next-milestones p{font-size:.86rem}
+.invention-patent-record{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;background:rgba(214,230,216,.2)}
+.invention-patent-record h2{margin:1rem 0 1.6rem}
+.specification-download{display:flex;flex-direction:column;gap:.8rem;width:fit-content;max-width:100%;margin-top:2rem;padding:1.4rem 1.6rem;border:1px solid var(--accent);color:var(--ink);font-size:.92rem;text-decoration:none;transition:background .2s}
+.specification-download span{font-size:.65rem;color:var(--accent);letter-spacing:.08em}
+.specification-download:hover{background:rgba(214,230,216,.55)}
+.invention-patent-card{display:grid;gap:1.3rem;padding:2.3rem;border:1px solid var(--accent);background:rgba(255,255,255,.24)}
+.invention-patent-card code{font:1.8rem ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.02em;color:var(--ink)}
+.invention-patent-card button{font:inherit;font-size:.73rem;padding:.7rem 1rem;background:none;border:1px solid var(--line);color:var(--accent);width:fit-content;cursor:pointer}
+.invention-patent-card a{color:var(--accent);font-size:.82rem;text-underline-offset:.25em}
+#patent-copy-status{font-size:.72rem;color:var(--accent)}
+@keyframes invention-flow{to{stroke-dashoffset:-150}}
+@media(max-width:1000px){.invention-origin,.invention-evolution,.invention-journey,.invention-mathematics,.invention-poc,.invention-patent-record{padding:5rem 7vw}.invention-equation-card{padding:1.6rem}.invention-milestones li{grid-template-columns:180px 1fr;gap:2rem}.invention-state-panel,.invention-feedback-panel{padding:1.7rem;gap:2rem}.patent-equation math{font-size:1.16rem}.poc-main-flow{grid-template-columns:1fr 1fr}.invention-patent-record{gap:2rem}}
+@media(max-width:760px){body[data-scene="model"] .invention-page .subsite-hero{height:auto}.invention-hero-actions{justify-content:flex-start;margin:1.6rem 0 0}.invention-origin,.invention-evolution,.invention-journey,.invention-mathematics,.invention-poc,.invention-patent-record{padding:4rem 7vw}.origin-comparison,.invention-equation-grid,.invention-state-panel,.invention-feedback-panel,.invention-patent-record,.invention-next-milestones{grid-template-columns:1fr}.origin-comparison article{padding:1.6rem}.origin-comparison h3{font-size:2.1rem}.invention-stage-controls{gap:.5rem}.invention-stage-controls button{padding:.7rem .9rem;font-size:.7rem}.invention-stage-description{min-height:6rem}.invention-milestones li{grid-template-columns:1fr;gap:.65rem;padding:1.6rem 0 1.6rem 1.3rem}.invention-milestones li:before{top:1.9rem}.invention-equation-card{padding:1.4rem}.patent-equation math{font-size:1.05rem}.invention-state-panel,.invention-feedback-panel{padding:1.4rem;gap:1.5rem}.state-key{gap:.6rem}.state-key dd{font-size:.72rem}.poc-main-flow article{padding:1.3rem 1rem}.poc-reference-flow{flex-direction:column;text-align:center}.poc-reference-flow i{transform:rotate(90deg)}.invention-next-milestones{gap:1.7rem;margin-top:2.5rem}.invention-patent-card{padding:1.5rem}.invention-patent-card code{font-size:1.5rem}}
+@media(prefers-reduced-motion:reduce){.flow-line,.invention-evolution-map[data-stage="3"] .feedback-line{animation:none}.evidence-nodes,.graph-nodes,.hypothesis-shapes,.world-shape{transition:none}}
+ .invention-scene-ready>.scene-fallback{display:none}
