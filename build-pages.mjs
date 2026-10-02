@@ -21,7 +21,7 @@ const index = head('Perception as Infrastructure', 'Cosmic is developing radio-f
       <p>An AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.</p>
       <a href="intelligence.html">Discover the thinking <span aria-hidden="true">↗</span></a>
     </div>
-    <div class="intro-baseline"><span>Spatial intelligence, from the environment.</span><span>Built around a wider view.</span></div>
+    <div class="intro-baseline"><span>Instead of making every vehicle on-road smart individually, Cosmic turns the road smarter</span><span>NLOS awareness, Traffic management, Accident audits, Critical alerts and more with 0-Identity capture.</span></div>
   </section>
   <div class="experience-canvas-wrap" aria-hidden="true">
     <canvas id="experience-canvas"></canvas>
@@ -95,15 +95,15 @@ const pages = [
     file: 'intelligence.html', title: 'Intelligence', mode: 'model',
     desc: 'An RF-derived spatial world model that preserves geometry, motion, uncertainty and the evidence behind its estimates.',
     heroTitle: 'Physical space.<br><span class="accent">Shared intelligence.</span>',
-    heroCopy: 'Cosmic is developing an RF Spatial World Model: a machine-readable representation of the physical world, built from radio-frequency observations.',
+    heroCopy: 'Cosmic is developing an RF Spatial World Perception Model: a machine-readable representation of the physical world, built from distributed radio-frequency observations.',
     sceneLabel: 'Distributed RF observations form candidate spatial states, undergo physics consistency checks and refine an uncertainty-aware world model',
     content: `
  <section class="invention-thesis content-reveal">
   <p class="thesis-lead">A physical-world perception layer<br>for machines and software.</p>
   <p>Places are shared. Their spatial understanding can be, too. The architecture brings observations from the environment into a model that multiple systems can use, each for a different purpose.<br><a class="invention-context-link" href="invention.html">Explore the Invention ↗</a></p>
  </section>
-  <section class="model-anatomy content-reveal">
-  <div class="section-intro"><h2>More than<br><em>a shape in space.</em></h2><p>A useful model must describe what may be present, how it is changing, and how much the evidence supports that interpretation.</p></div>
+ <section class="model-anatomy content-reveal">
+  <div class="section-intro"><h2>More than<br><em>a shape in space.</em></h2><p>A useful model must describe what may be present, how it is changing, and how much the evidence supports that interpretation.</p><div class="final-actions" style="margin-top: 1.5rem;"><a href="invention.html" style="text-decoration: underline;">Explore the Invention <span>↗</span></a></div></div>
   <dl class="model-fields">
    <div><dt>Geometry</dt><dd>Occupancy, surfaces and object extent describe the structure of a region.</dd></div>
    <div><dt>Motion</dt><dd>Position and movement give the model a history, rather than a single frozen frame.</dd></div>
@@ -193,7 +193,7 @@ const pages = [
     content: `
  <section class="auto-perspective content-reveal">
   <div><span class="auto-eyebrow">Implementation · Automotive</span><h2>The road does not end<br>at the <em>edge of sight.</em></h2></div>
-  <div class="auto-explanation"><p>At a junction, a building can hide an approaching road user. A sensing position elsewhere may observe that same space differently.</p><p>The idea is to bring those environmental observations into a shared spatial model—giving a vehicle additional evidence to evaluate alongside its own sensors.</p><small>Illustrative concept, not a live detection or driving system. Observability depends on the environment and deployment.</small></div>
+  <div class="auto-explanation"><p>At a junction, a building can hide an approaching road user. A sensing position elsewhere may observe that same space differently.</p><p>The idea is to bring those environmental observations into a shared spatial model—giving a vehicle additional evidence to evaluate alongside its own sensors and eventually steer the vehicle autonomous through the infrastructure itself with only a fail safe mechanism on board.</p></div>
  </section>
  ${automotiveResearch}
  <section class="auto-context content-reveal">
