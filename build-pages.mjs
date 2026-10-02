@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 
-const navDropdown = `<a href="invention.html">Invention</a><a href="infrastructure.html">Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html">Automotive</a><a href="robotics.html">Robotics</a></div></div>`;
+const navDropdown = `<a href="intelligence.html">Intelligence</a><a href="infrastructure.html">Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html">Automotive</a><a href="robotics.html">Robotics</a></div></div>`;
 
 const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script></head><body data-scene="${mode}">`;
 
@@ -11,13 +11,13 @@ const footer = `<footer><div class="footer-brand"><img src="assets/Cosmic%20logo
 const index = head('Perception beyond the vehicle.', 'Cosmic is developing radio-frequency perception infrastructure: an AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.', 'network') + `
 <link rel="stylesheet" href="assets/experience.css">
 <a class="home-wordmark" href="#top" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic" fetchpriority="high"></a>
-<header class="experience-nav"><nav class="home-navigation" aria-label="Explore Cosmic"><a href="invention.html">Invention</a><a href="infrastructure.html">Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html">Automotive</a><a href="robotics.html">Robotics</a></div></div></nav></header>
+<header class="experience-nav"><nav class="home-navigation" aria-label="Explore Cosmic"><a href="intelligence.html">Intelligence</a><a href="infrastructure.html">Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html">Automotive</a><a href="robotics.html">Robotics</a></div></div></nav></header>
 <main class="experience-shell" id="experience">
   <section class="brand-intro" id="top" aria-labelledby="intro-title">
     <div class="intro-copy">
       <h1 id="intro-title">RF Perception<br><em>As Infrastructure.</em></h1>
       <p>An AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.</p>
-      <a href="invention.html">Discover the thinking <span aria-hidden="true">↗</span></a>
+      <a href="intelligence.html">Discover the thinking <span aria-hidden="true">↗</span></a>
     </div>
     <div class="intro-baseline"><span>Spatial intelligence, from the environment.</span><span>Built around a wider view.</span></div>
   </section>
@@ -79,7 +79,7 @@ const index = head('Perception beyond the vehicle.', 'Cosmic is developing radio
     <div class="chapter-copy">
       <h2>Built around places.<br><em>Useful across systems.</em></h2>
       <p>Mobility is one application. The wider idea is a physical-world perception layer that robotics, industrial operations, digital twins and AI can share.</p>
-      <div class="final-actions"><a href="invention.html">Explore the invention <span>↗</span></a><a href="infrastructure.html">View infrastructure <span>↗</span></a></div>
+      <div class="final-actions"><a href="intelligence.html">Explore the intelligence <span>↗</span></a><a href="infrastructure.html">View infrastructure <span>↗</span></a></div>
     </div>
     <div class="experience-footer"><span>© 2026 Cosmic</span><span>Radio-frequency perception infrastructure · Concept visualization</span></div>
   </section>
@@ -89,7 +89,7 @@ const index = head('Perception beyond the vehicle.', 'Cosmic is developing radio
 
 const pages = [
   {
-    file: 'invention.html', title: 'Invention', mode: 'model',
+    file: 'intelligence.html', title: 'Intelligence', mode: 'model',
     desc: 'An RF-derived spatial world model that preserves geometry, motion, uncertainty and the evidence behind its estimates.',
     heroTitle: 'Physical space.<br><span class="accent">Shared intelligence.</span>',
     heroCopy: 'Cosmic is developing an RF Spatial World Model: a machine-readable representation of the physical world, built from radio-frequency observations.',
@@ -189,7 +189,7 @@ const pages = [
 function subPage(p) {
   const isImplActive = p.file === 'automotive.html' || p.file === 'robotics.html';
   const localNav = `
-    <a href="invention.html"${p.file === 'invention.html' ? ' class="is-active" aria-current="page"' : ''}>Invention</a>
+    <a href="intelligence.html"${p.file === 'intelligence.html' ? ' class="is-active" aria-current="page"' : ''}>Intelligence</a>
     <a href="infrastructure.html"${p.file === 'infrastructure.html' ? ' class="is-active" aria-current="page"' : ''}>Infrastructure</a>
     <div class="nav-dropdown">
       <a href="automotive.html" class="dropdown-trigger${isImplActive ? ' is-active' : ''}">Implementation <span class="nav-chevron">▾</span></a>
