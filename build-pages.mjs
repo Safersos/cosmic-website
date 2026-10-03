@@ -9,15 +9,16 @@ const siteFooter=(className='subsite-footer')=>`<footer class="${className} cosm
 
 const active = (current, files) => files.includes(current) ? ' is-active' : '';
 const currentLink = (current, file) => current === file ? ' class="is-active" aria-current="page"' : '';
-const siteNav = (current = '') => `<a href="intelligence.html"${currentLink(current,'intelligence.html')}>Intelligence</a><a href="infrastructure.html"${currentLink(current,'infrastructure.html')}>Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger${active(current, ['automotive.html','robotics.html'])}">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html"${currentLink(current,'automotive.html')}>Automotive</a><a href="robotics.html"${currentLink(current,'robotics.html')}>Robotics</a></div></div>`;
+const siteNav = (current = '') => `<a href="intelligence.html"${currentLink(current,'intelligence.html')}>Intelligence</a><a href="infrastructure.html"${currentLink(current,'infrastructure.html')}>Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger${active(current, ['automotive.html','robotics.html'])}">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html"${currentLink(current,'automotive.html')}>Automotive</a><a href="robotics.html"${currentLink(current,'robotics.html')}>Robotics</a></div></div><a class="mobile-journey-link" href="invention.html"${currentLink(current,'invention.html')}>The Journey</a>`;
+const mobileMenuButton = '<button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open navigation"><span></span><span></span><span></span></button>';
 
-const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script><link rel="stylesheet" href="assets/site-chrome.css?v=20261003-transition"><script src="assets/page-transition.js?v=20261003" defer></script></head><body data-scene="${mode}">`;
+const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script><link rel="stylesheet" href="assets/site-chrome.css?v=20261003-mobile-menu4"><script src="assets/page-transition.js?v=20261003" defer></script></head><body data-scene="${mode}">`;
 
 const index = head('Perception as Infrastructure', 'Cosmic is developing radio-frequency perception infrastructure: an AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.', 'network') + `
-<link rel="stylesheet" href="assets/experience.css?v=20261002-robot-scenes">
-<script src="assets/site-navigation.js?v=20261002-priority" defer></script>
+<link rel="stylesheet" href="assets/experience.css?v=20261003-mobile-footer2">
+<script src="assets/site-navigation.js?v=20261003-mobile-menu" defer></script>
 <a class="home-wordmark" href="#top" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic" width="1280" height="480" fetchpriority="high"></a>
-<header class="experience-nav"><nav class="home-navigation" aria-label="Explore Cosmic">${siteNav()}</nav></header>
+<header class="experience-nav">${mobileMenuButton}<nav class="home-navigation" id="site-menu" aria-label="Explore Cosmic">${siteNav()}</nav></header>
 <main class="experience-shell" id="experience">
   <section class="brand-intro" id="top" aria-labelledby="intro-title">
     <div class="intro-copy">
@@ -91,7 +92,7 @@ const index = head('Perception as Infrastructure', 'Cosmic is developing radio-f
     ${siteFooter('experience-footer')}
   </section>
 </main>
-<script src="assets/home-intro.js"></script><script type="module" src="assets/experience-bootstrap.js?v=20261003-performance"></script>
+<script src="assets/home-intro.js"></script><script type="module" src="assets/experience-bootstrap.js?v=20261003-preload"></script>
 </body></html>`;
 
 const pages = [
@@ -199,13 +200,13 @@ const pages = [
 
 function subPage(p) {
   return head(p.title, p.desc, p.mode) + `
-<link rel="stylesheet" href="assets/subsite.css">
-<script src="assets/site-navigation.js?v=20261002-priority" defer></script>
+<link rel="stylesheet" href="assets/subsite.css?v=20261003-mobile-menu">
+<script src="assets/site-navigation.js?v=20261003-mobile-menu" defer></script>
 <link rel="stylesheet" href="assets/scene-polish.css?v=20261002-intelligence">
 <a class="skip-link" href="#page-content">Skip to content</a>
 <header class="subsite-nav">
  <a class="brand" href="index.html" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic" width="1280" height="480"></a>
- <nav aria-label="Explore Cosmic">${siteNav(p.file)}</nav>
+ ${mobileMenuButton}<nav id="site-menu" aria-label="Explore Cosmic">${siteNav(p.file)}</nav>
  <a class="subsite-home" href="invention.html">The Journey <span>↗</span></a>
 </header>
 <main class="subsite${p.file==='invention.html'?' invention-page':''}" id="page-content">
@@ -219,7 +220,7 @@ function subPage(p) {
 </main>
 ${siteFooter()}
 <script type="module" src="assets/scene.js?v=20261002-intelligence"></script>
-<script type="module" src="assets/subsite-fx.js"></script>
+<script type="module" src="assets/subsite-fx.js?v=20261003-transition"></script>
 </body></html>`;
 }
 

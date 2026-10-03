@@ -559,10 +559,22 @@ body[data-scene="network"] header.experience-nav {
     }
 
     .experience-footer {
-        left: 3rem;
+        left: 1.4rem;
         right: 1.4rem;
-        flex-direction: column;
-        gap: .5rem
+        bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        gap: .8rem
+    }
+
+    .experience-final {
+        min-height: max(140vh, 980px);
+        padding-top: 14vh;
+        padding-bottom: calc(230px + env(safe-area-inset-bottom));
+        align-items: center
+    }
+
+    .experience-final .chapter-copy {
+        margin-bottom: 0;
+        transform: translateY(-60px)
     }
 
     .experience-grain {

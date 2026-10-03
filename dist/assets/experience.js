@@ -1,5 +1,5 @@
 import * as T from './three.module.js';
-import { vehicle } from './vehicle.js?v=20261002-unbranded';
+import { vehicle } from './vehicle.js?v=20261003-cache';
 import { TravelMotion } from './travel-motion.js';
 import { RoomEnvironment } from './addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from './addons/loaders/GLTFLoader.js';

@@ -1,7 +1,7 @@
 const intro = document.querySelector('.brand-intro');
 let started = false;
 const assetVersion = '20261003';
-const experienceUrl = new URL(`./experience.js?v=${assetVersion}-performance`, import.meta.url).href;
+const experienceUrl = new URL(`./experience.js?v=${assetVersion}-preload`, import.meta.url).href;
 const modelUrls = [
   `./actors/human.glb?v=${assetVersion}`,
   `./actors/casual-hoodie.gltf?v=${assetVersion}`,
