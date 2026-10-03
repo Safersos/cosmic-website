@@ -5,7 +5,7 @@ import {siteFooter,journeyNavLink} from './site-chrome.mjs';
 
 const active = (current, files) => files.includes(current) ? ' is-active' : '';
 const currentLink = (current, file) => current === file ? ' class="is-active" aria-current="page"' : '';
-const siteNav = (current = '') => `<a href="intelligence.html"${currentLink(current,'intelligence.html')}>Intelligence</a><a href="infrastructure.html"${currentLink(current,'infrastructure.html')}>Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger${active(current, ['automotive.html','robotics.html'])}">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html"${currentLink(current,'automotive.html')}>Automotive</a><a href="robotics.html"${currentLink(current,'robotics.html')}>Robotics</a></div></div>${current?journeyNavLink(current):''}`;
+const siteNav = (current = '') => `<a href="intelligence.html"${currentLink(current,'intelligence.html')}>Intelligence</a><a href="infrastructure.html"${currentLink(current,'infrastructure.html')}>Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger${active(current, ['automotive.html','robotics.html'])}">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html"${currentLink(current,'automotive.html')}>Automotive</a><a href="robotics.html"${currentLink(current,'robotics.html')}>Robotics</a></div></div>`;
 
 const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script><link rel="stylesheet" href="assets/site-chrome.css?v=20261002-global"></head><body data-scene="${mode}">`;
 
@@ -21,7 +21,7 @@ const index = head('Perception as Infrastructure', 'Cosmic is developing radio-f
       <p>An AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.</p>
       <a href="intelligence.html">Discover the thinking <span aria-hidden="true">↗</span></a>
     </div>
-    <div class="intro-baseline"><span>Instead of making every vehicle on-road smart individually, Cosmic turns the road smarter</span><span>NLOS awareness, Traffic management, Accident audits, Critical alerts and more with 0-Identity capture.</span></div>
+    <div class="intro-baseline"><span>Spatial intelligence, from the environment.</span><span>Built around a wider view.</span></div>
   </section>
   <div class="experience-canvas-wrap" aria-hidden="true">
     <canvas id="experience-canvas"></canvas>
@@ -100,10 +100,10 @@ const pages = [
     content: `
  <section class="invention-thesis content-reveal">
   <p class="thesis-lead">A physical-world perception layer<br>for machines and software.</p>
-  <p>Places are shared. Their spatial understanding can be, too. The architecture brings observations from the environment into a model that multiple systems can use, each for a different purpose.<br><a class="invention-context-link" href="invention.html">Explore the Invention ↗</a></p>
+  <p style="text-align: justify;">Places are shared. Their spatial understanding can be, too. The architecture brings observations from the environment into a model that multiple systems can use, each for a different purpose.</p>
  </section>
  <section class="model-anatomy content-reveal">
-  <div class="section-intro"><h2>More than<br><em>a shape in space.</em></h2><p>A useful model must describe what may be present, how it is changing, and how much the evidence supports that interpretation.</p><div class="final-actions" style="margin-top: 1.5rem;"><a href="invention.html" style="text-decoration: underline;">Explore the Invention <span>↗</span></a></div></div>
+  <div class="section-intro"><h2>More than<br><em>a shape in space.</em></h2><p style="text-align: justify;">A useful model must describe what may be present, how it is changing, and how much the evidence supports that interpretation.</p><div class="final-actions" style="margin-top: 1.5rem;"><a href="invention.html" style="text-decoration: underline;">Explore the Invention <span>↗</span></a></div></div>
   <dl class="model-fields">
    <div><dt>Geometry</dt><dd>Occupancy, surfaces and object extent describe the structure of a region.</dd></div>
    <div><dt>Motion</dt><dd>Position and movement give the model a history, rather than a single frozen frame.</dd></div>
@@ -112,7 +112,7 @@ const pages = [
   </dl>
  </section>
  <section class="adaptive-section content-reveal">
-  <div><h2>What is uncertain<br><em>guides what comes next.</em></h2><p>Uncertainty is part of the model. It can inform where the infrastructure gathers additional evidence, allowing subsequent observations to refine an estimate or challenge an earlier interpretation.</p></div>
+  <div><h2>What is uncertain<br><em>guides what comes next.</em></h2><p style="text-align: justify;">Uncertainty is part of the model. It can inform where the infrastructure gathers additional evidence, allowing subsequent observations to refine an estimate or challenge an earlier interpretation.</p></div>
   <div class="inference-loop" aria-label="Observation informs interpretation, confidence assessment and further sensing">
    <span>Observe</span><i aria-hidden="true">→</i><span>Interpret</span><i aria-hidden="true">→</i><span>Assess</span><i aria-hidden="true">→</i><span>Adapt</span>
    <div class="loop-return" aria-hidden="true"></div>
@@ -142,7 +142,7 @@ const pages = [
     heroCopy: 'A network of RF perception nodes turns separate observation points into a shared resource for a physical environment.',
     sceneLabel: 'Conceptual distributed network with overlapping observation regions and connections between sensing nodes',
     content: `
- <section class="network-principle content-reveal"><h2>Different positions.<br><em>Complementary evidence.</em></h2><p>No observation contains the whole picture. Spatially distributed nodes contribute different views of a region, creating opportunities to resolve ambiguity and maintain context between neighbouring areas.</p></section>
+ <section class="network-principle content-reveal"><h2>Different positions.<br><em>Complementary evidence.</em></h2><p style="text-align: justify;">No observation contains the whole picture. Spatially distributed nodes contribute different views of a region, creating opportunities to resolve ambiguity and maintain context between neighbouring areas.</p></section>
  <section class="network-map-section content-reveal">
   <div class="network-map" aria-hidden="true">
    <svg viewBox="0 0 860 330" fill="none"><defs><pattern id="network-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="currentColor" opacity=".07"/></pattern></defs><rect width="860" height="330" fill="url(#network-grid)"/><g stroke="currentColor"><ellipse cx="190" cy="170" rx="140" ry="108" opacity=".25"/><ellipse cx="430" cy="160" rx="170" ry="128" opacity=".35"/><ellipse cx="680" cy="170" rx="140" ry="108" opacity=".25"/><path d="M190 170 430 160 680 170" stroke-dasharray="4 7"/><path d="M190 170Q300 25 430 160Q560 25 680 170" opacity=".5"/></g><g fill="currentColor"><circle cx="190" cy="170" r="6"/><circle cx="430" cy="160" r="6"/><circle cx="680" cy="170" r="6"/></g></svg>
@@ -150,8 +150,8 @@ const pages = [
   <div class="network-notes"><article><h3>Observe locally</h3><p>Each node contributes RF observations from its position within the environment.</p></article><article><h3>Establish relationships</h3><p>Coordination and calibration help observations from different nodes remain meaningful together.</p></article><article><h3>Combine spatially</h3><p>Processing connects the available evidence across regions, retaining its origin and uncertainty.</p></article></div>
  </section>
  <section class="deployment-section content-reveal">
-  <div><h2>The place shapes<br><em>the deployment.</em></h2><p>A corridor, industrial site and complex public space have different geometries and observation needs. The architecture is intended to accommodate those differences rather than assume one universal sensing arrangement.</p></div>
-  <div class="deployment-details"><article><h3>Coverage as a relationship</h3><p>Overlapping observation regions provide shared evidence. Their value depends on the physical environment and the reconstruction task.</p></article><article><h3>Processing as a system</h3><p>Local and wider processing can contribute to a common spatial view. Application interfaces make that information available to consuming systems.</p></article></div>
+  <div><h2>The place shapes<br><em>the deployment.</em></h2><p style="text-align: justify;">A corridor, industrial site and complex public space have different geometries and observation needs. The architecture is intended to accommodate those differences rather than assume one universal sensing arrangement.</p></div>
+  <div class="deployment-details"><article><h3>Coverage as a relationship</h3><p style="text-align: justify;">Overlapping observation regions provide shared evidence. Their value depends on the physical environment and the reconstruction task.</p></article><article><h3>Processing as a system</h3><p style="text-align: justify;">Local and wider processing can contribute to a common spatial view. Application interfaces make that information available to consuming systems.</p></article></div>
  </section>
  <section class="network-closing content-reveal"><p>The infrastructure carries the burden of observation.<br><em>Applications work with the resulting context.</em></p></section>
  `,
@@ -200,7 +200,7 @@ const pages = [
   <div class="auto-context-heading"><h2>Useful context.<br><em>Not just a detection.</em></h2><p>A spatial estimate matters only when the consuming system can interpret it.</p></div>
   <div class="auto-evidence"><article><span class="evidence-mark position-mark" aria-hidden="true"></span><h3>Where things may be</h3><p>Geometry and position connect an observation to the physical road environment.</p></article><article><span class="evidence-mark motion-mark" aria-hidden="true"></span><h3>How they are changing</h3><p>Motion and temporal continuity help describe a developing situation.</p></article><article><span class="evidence-mark confidence-mark" aria-hidden="true"></span><h3>How much is known</h3><p>Confidence and provenance preserve the limits of the estimate and the evidence behind it.</p></article></div>
  </section>
- <section class="auto-responsibility content-reveal"><div><span class="auto-eyebrow">Built to complement</span><h2>A broader view.<br><em>The same responsibility.</em></h2></div><div><p>Infrastructure supplies spatial context. The vehicle evaluates that context alongside onboard perception.</p><p>Planning, control and safety decisions remain with the consuming system. An additional viewpoint is not a substitute for that responsibility.</p><a href="robotics.html">Explore Robotics implementation <span aria-hidden="true">↗</span></a></div></section>
+ <section class="auto-responsibility content-reveal"><div><span class="auto-eyebrow">Built to complement</span><h2>A broader view.<br><em>The same responsibility.</em></h2></div><div><p>Infrastructure supplies spatial context. The vehicle evaluates that context alongside onboard perception. Planning, control and safety decisions remain with the consuming system.</p></div></section>
  `,
     nextTitle: 'Robotic perception<br><em>in automation.</em>', nextText: 'See how RF perception infrastructure supports autonomous mobile robots and industrial co-bots.', nextHref: 'robotics.html', nextLink: 'Robotics implementation'
   },
@@ -213,10 +213,10 @@ const pages = [
     content: `
  <section class="invention-thesis content-reveal">
   <div><span class="auto-eyebrow">Implementation · Robotics</span><p class="thesis-lead">Perception integrated into the workspace,<br>not just the robot.</p></div>
- <p>Local robot sensors can be obstructed by machinery, materials, and structural obstacles. Infrastructure-based RF perception projects situational context into robot motion planning.</p>
+ <p style="text-align: justify;">Local robot sensors can be obstructed by machinery, materials, and structural obstacles. Infrastructure-based RF perception projects situational context into robot motion planning.</p>
  </section>
- <section class="robot-road content-reveal"><div class="robot-road-visual" aria-hidden="true"><span class="road-line"></span><span class="robot-orb orb-a">BOT</span><span class="robot-orb orb-b">BOT</span><span class="human-orb human-a">HUMAN</span><span class="human-orb human-b">HUMAN</span><span class="signal-arc"></span></div><div><span class="auto-eyebrow">Shared scene</span><h2>Robots and people<br><em>in the same frame.</em></h2><p>On a public road, a robot can walk a dog, carry luggage or assist a person while nearby infrastructure observes the changing geometry. The robot receives context about what it cannot currently see and humans remain part of the model, not obstacles outside it.</p></div></section>
- <section class="robot-automation content-reveal"><div><span class="auto-eyebrow">Industrial automation</span><h2>Perception at the<br><em>workspace scale.</em></h2><p>Stationary nodes and mobile machines share occupancy, motion and confidence. Fleets can coordinate around blind corners, changing materials and human workers without requiring every robot to carry the full sensing burden.</p></div><div class="automation-grid"><span>WAREHOUSE</span><span>CO-BOTS</span><span>PORTS</span><span>INSPECTION</span></div></section>
+ <section class="robot-road content-reveal"><div class="robot-road-visual" aria-hidden="true"><span class="road-line"></span><span class="robot-orb orb-a">BOT</span><span class="robot-orb orb-b">BOT</span><span class="human-orb human-a">HUMAN</span><span class="human-orb human-b">HUMAN</span><span class="signal-arc"></span></div><div><span class="auto-eyebrow">Shared scene</span><h2>Robots and people<br><em>in the same frame.</em></h2><p style="text-align: justify;">On a public road, a robot can walk a dog, carry luggage or assist a person while nearby infrastructure observes the changing geometry. The robot receives context about what it cannot currently see and humans remain part of the model, not obstacles outside it.</p></div></section>
+ <section class="robot-automation content-reveal"><div><span class="auto-eyebrow">Industrial automation</span><h2>Perception at the<br><em>workspace scale.</em></h2><p style="text-align: justify;">Stationary nodes and mobile machines share occupancy, motion and confidence. Fleets can coordinate around blind corners, changing materials and human workers without requiring every robot to carry the full sensing burden.</p></div><div class="automation-grid"><span>WAREHOUSE</span><span>CO-BOTS</span><span>PORTS</span><span>INSPECTION</span></div></section>
  <section class="model-anatomy content-reveal">
   <div class="section-intro"><h2>Continuous awareness<br><em>across the facility.</em></h2><p>A unified perception field for fleet navigation, safety zones, and automated material handling.</p></div>
   <dl class="model-fields">
@@ -255,13 +255,13 @@ function subPage(p) {
 <header class="subsite-nav">
  <a class="brand" href="index.html" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic"></a>
  <nav aria-label="Explore Cosmic">${siteNav(p.file)}</nav>
- <span class="subsite-home">COSMIC / 2026</span>
+ <a class="subsite-home" href="invention.html">The Journey <span>↗</span></a>
 </header>
 <main class="subsite${p.file==='invention.html'?' invention-page':''}" id="page-content">
  <section class="subsite-hero">
   <div class="subsite-scene"><div class="scene-fallback" role="img" aria-label="${p.sceneLabel}"><span>RF / SPATIAL MODEL</span></div><canvas id="rf-scene" role="img" aria-label="${p.sceneLabel}"></canvas></div>
   <div class="subsite-hero-copy"><h1>${p.heroTitle}</h1><p>${p.heroCopy}</p>${p.heroActions||''}</div>
-  ${p.mode === 'vehicle' ? '<div class="auto-view-control"><div class="auto-view-buttons" role="group" aria-label="Compare sensing viewpoints"><button type="button" data-view="onboard" aria-pressed="false">Onboard view</button><button type="button" data-view="shared" aria-pressed="true">With infrastructure</button></div><p id="view-caption" aria-live="polite">RF spatial view — geometry and observation lines.</p></div><div class="auto-scene-legend"><span><i></i>Environmental observation</span><small>Concept study</small></div>' : ''}
+  ${p.mode === 'vehicle' ? '<div class="auto-view-control"><div class="auto-view-buttons" role="group" aria-label="Compare sensing viewpoints"><button type="button" data-view="onboard" aria-pressed="false">Onboard view</button><button type="button" data-view="shared" aria-pressed="true">With infrastructure</button></div><p id="view-caption" aria-live="polite">RF spatial view — geometry and observation lines.</p></div>' : ''}
  </section>
  ${p.content}
  <section class="subsite-next content-reveal"><h2>${p.nextTitle}</h2><p>${p.nextText}</p><div><a href="${p.nextHref}">${p.nextLink}<b aria-hidden="true">↗</b></a></div></section>
@@ -280,7 +280,7 @@ function contactPage() {
 <link rel="stylesheet" href="assets/scene-polish.css">
 <link rel="stylesheet" href="assets/contact-page.css">
 <a class="skip-link" href="#page-content">Skip to content</a>
-<header class="subsite-nav"><a class="brand" href="index.html" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic"></a><nav aria-label="Explore Cosmic">${siteNav('contact.html')}</nav><span class="subsite-home">COSMIC / 2026</span></header>
+<header class="subsite-nav"><a class="brand" href="index.html" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic"></a><nav aria-label="Explore Cosmic">${siteNav('contact.html')}</nav><a class="subsite-home" href="invention.html">The Journey <span>↗</span></a></header>
 <main class="subsite contact-page" id="page-content">
  <div class="contact-heading"><span class="auto-eyebrow">CONTACT COSMIC</span><h1>Let’s discuss<br><em>your environment.</em></h1><p>Share your research question, proposed pilot or application. Give us enough context to understand where you would like to begin.</p></div>
  <section class="contact-page-layout" aria-label="Send an enquiry"><div class="contact-context"><span class="auto-eyebrow">BUILD WITH US</span><h2>A clear starting point<br><em>makes better work.</em></h2><p>We welcome enquiries about RF research, sensing hardware, simulation, infrastructure pilots, automotive and robotics.</p><div class="contact-context-lines"><span>01 / Your environment</span><span>02 / The question you want to test</span><span>03 / Your role or organization</span></div></div>

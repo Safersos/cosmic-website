@@ -388,12 +388,20 @@ body[data-scene="network"] header.experience-nav {
     bottom: 2rem;
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid var(--line);
-    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, .15) !important;
+    padding: 1.2rem 0 0 !important;
     font-size: .55rem;
     letter-spacing: .13em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .38)
+    color: rgba(255, 255, 255, .45) !important;
+    background: transparent !important;
+}
+.cosmic-footer.experience-footer .footer-contact-icons a {
+    border-color: rgba(255, 255, 255, .25);
+}
+.cosmic-footer.experience-footer .footer-contact-icons a:hover {
+    background: rgba(255, 255, 255, .1);
+    color: #fff;
 }
 
 .experience-rail {

@@ -1,7 +1,7 @@
 .mobility-research,.mobility-route,.mobility-safety{padding:6rem 9vw;border-top:1px solid var(--line)}
 .mobility-heading{max-width:900px;margin-bottom:3rem}
 .mobility-heading h2,.mobility-safety h2{margin:.8rem 0 1.6rem}
-.mobility-research p,.mobility-route p,.mobility-safety p{font-size:.95rem;line-height:1.85;color:var(--muted);max-width:760px}
+.mobility-research p,.mobility-route p,.mobility-safety p{font-size:.95rem;line-height:1.85;color:var(--muted);max-width:760px;text-align:justify;margin-bottom:1rem}
 .mobility-research a,.mobility-route a,.mobility-safety a{color:var(--accent);text-underline-offset:4px}
 .mobility-label{display:block;font:.62rem/1.7 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 .mobility-research h3,.mobility-route h3,.mobility-safety h3{font-size:clamp(1.6rem,2.1vw,2.25rem);line-height:1.12;font-weight:400;letter-spacing:-.03em;margin:1rem 0 1.4rem}
