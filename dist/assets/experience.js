@@ -139,13 +139,13 @@ function addRiggedActor(gltf,{x,z,height,phase,kind,tint,role='',clip='Walk',hea
  }
  animatedActors.push({instances,walk,phase,z,x,kind,role,heading});
 }
-actorLoader.load(new URL('./actors/human.glb',import.meta.url).href,gltf=>{
+actorLoader.load(new URL('./actors/human.glb?v=20261003',import.meta.url).href,gltf=>{
  addRiggedActor(gltf,{x:6.2,z:0,height:1.84,phase:.37,kind:'robot',role:'junction-robot',clip:'Idle',heading:Math.PI/2});
  addRiggedActor(gltf,{x:-6.2,z:-50,height:1.84,phase:.7,kind:'robot',role:'sidewalk-walker'});
  addRiggedActor(gltf,{x:-6.2,z:0,height:1.84,phase:.7,kind:'robot',role:'final-robot',rfOnly:true});
  actorLoadsPending--;
 },undefined,error=>{console.error('Robot rig unavailable',error);actorLoadsPending--});
-actorLoader.load(new URL('./actors/casual-hoodie.gltf',import.meta.url).href,gltf=>{
+actorLoader.load(new URL('./actors/casual-hoodie.gltf?v=20261003',import.meta.url).href,gltf=>{
  addRiggedActor(gltf,{x:5.8,z:-34,height:1.75,phase:.15,kind:'person'});
  addRiggedActor(gltf,{x:5.8,z:-181,height:1.75,phase:.38,kind:'person'});
  addRiggedActor(gltf,{x:-5.9,z:-280,height:1.72,phase:.24,kind:'person'});
@@ -153,14 +153,14 @@ actorLoader.load(new URL('./actors/casual-hoodie.gltf',import.meta.url).href,glt
  addRiggedActor(gltf,{x:7.5,z:-.9,height:1.75,phase:.15,kind:'person',role:'junction-human-one',clip:'Interact',heading:-Math.PI/2+.35});
  actorLoadsPending--;
 },undefined,error=>{console.error('Clothed pedestrian rig unavailable',error);actorLoadsPending--});
-actorLoader.load(new URL('./actors/casual-woman.gltf',import.meta.url).href,gltf=>{
+actorLoader.load(new URL('./actors/casual-woman.gltf?v=20261003',import.meta.url).href,gltf=>{
  addRiggedActor(gltf,{x:-6.1,z:-226,height:1.67,phase:.58,kind:'person'});
  addRiggedActor(gltf,{x:5.9,z:-306,height:1.78,phase:.63,kind:'person'});
  addRiggedActor(gltf,{x:5.9,z:-340,height:1.74,phase:.41,kind:'person'});
  addRiggedActor(gltf,{x:7.5,z:.9,height:1.67,phase:.58,kind:'person',role:'junction-human-two',clip:'Wave',heading:-Math.PI/2-.35});
  actorLoadsPending--;
 },undefined,error=>{console.error('Clothed pedestrian rig unavailable',error);actorLoadsPending--});
-actorLoader.load(new URL('./actors/husky.gltf',import.meta.url).href,gltf=>{
+actorLoader.load(new URL('./actors/husky.gltf?v=20261003',import.meta.url).href,gltf=>{
  addRiggedActor(gltf,{x:-6,z:-58,height:.74,phase:.08,kind:'dog'});
  addRiggedActor(gltf,{x:-6,z:-173,height:.74,phase:.35,kind:'dog'});
  addRiggedActor(gltf,{x:6,z:-196,height:.78,phase:.62,kind:'dog'});
@@ -207,7 +207,7 @@ function prepareRadarCar(){
   });
 }
 
-let target=0, progress=0, previousCarZ=34,previousCarX=0,previousTime=0;
+let target=0, progress=0, previousCarZ=34,previousCarX=0,previousTime=0,animationFrame=0;
 const drivingMotion=new TravelMotion(0,{maxSpeed:1600,acceleration:12000,braking:14000,response:24});
 const railProgress=document.querySelector('#rail-progress'),railIndex=document.querySelector('#rail-index'),mode=document.querySelector('#telemetry-mode'),distance=document.querySelector('#telemetry-distance'),viewIndex=document.querySelector('#view-sequence-index'),viewLabel=document.querySelector('#view-sequence-label');
 const chapters=[...document.querySelectorAll('[data-scene-step]')];
@@ -219,6 +219,11 @@ const radarPositions={'dog-one':[28,62],'dog-two':[68,27],'traffic-one':[54,17],
 if(radarSweep)radarSweep.style.animation='none';
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const smooth=(a,b,t)=>a+(b-a)*(t*t*t*(t*(t*6-15)+10));
+// Reuse camera vectors instead of allocating ten temporary objects per frame.
+const chase=new T.Vector3(),closeView=new T.Vector3(),cockpit=new T.Vector3(),drone=new T.Vector3(),camPos=new T.Vector3();
+const exteriorLook=new T.Vector3(),povLook=new T.Vector3(),droneLook=new T.Vector3(),look=new T.Vector3();
+const viewStages=[['01','NORMAL VIEW'],['02','ZOOM / VEHICLE PERSPECTIVE'],['03','IN-CAR 360° RF SCREEN'],['','']];
+let renderedChapter=-1,renderedView=-1,renderedDistance='',renderedMode='';
 function updateScroll(){
  const intro=document.querySelector('.brand-intro')?.offsetHeight||0;
  const total=document.documentElement.scrollHeight-innerHeight-intro;
@@ -234,7 +239,9 @@ function updateScroll(){
 } addEventListener('scroll',updateScroll,{passive:true});updateScroll();
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.fov=isMobile?54:44;camera.updateProjectionMatrix()} addEventListener('resize',()=>{resize();updateScroll()},{passive:true});
 
-function frame(now){const dt=Math.max(0,Math.min((now-previousTime)/1000,.25))||.016;previousTime=now;
+function frame(now){
+  if(document.hidden){animationFrame=0;return}
+  const dt=Math.max(0,Math.min((now-previousTime)/1000,.25))||.016;previousTime=now;
   if(car.userData.loaded&&!radarCarPrepared)prepareRadarCar();
   if(reducedMotion||target===0){drivingMotion.position=target*414;drivingMotion.velocity=0;}else drivingMotion.advance(target*414,dt);
   progress=clamp(drivingMotion.position/414);
@@ -272,10 +279,12 @@ function frame(now){const dt=Math.max(0,Math.min((now-previousTime)/1000,.25))||
   // Returning to the intro resets this state immediately above.
   const stateProgress=progress;
   const cockpitReveal=smooth(0,1,clamp((stateProgress-.455)/.125))*(1-smooth(0,1,clamp((stateProgress-.81)/.11)));
-  const chase=new T.Vector3(laneDrift-(isMobile?3.2:5.8),isMobile?4.1:3.35,carZ+(isMobile?13.5:10.5)),closeView=new T.Vector3(laneDrift-2.65,1.95,carZ+6.2),cockpit=new T.Vector3(laneDrift,1.08,carZ-1.15),drone=new T.Vector3(laneDrift+10,13.5,carZ+13);
-  const camPos=new T.Vector3().lerpVectors(chase,closeView,zoom).lerp(cockpit,pov).lerp(drone,aerial);
+  chase.set(laneDrift-(isMobile?3.2:5.8),isMobile?4.1:3.35,carZ+(isMobile?13.5:10.5));
+  closeView.set(laneDrift-2.65,1.95,carZ+6.2);cockpit.set(laneDrift,1.08,carZ-1.15);drone.set(laneDrift+10,13.5,carZ+13);
+  camPos.lerpVectors(chase,closeView,zoom).lerp(cockpit,pov).lerp(drone,aerial);
   camera.position.copy(camPos); // Progress is damped once; camera and car stay in the same moving frame.
-  const exteriorLook=new T.Vector3(laneDrift,.85,carZ-(isMobile?1.5:5.8)),povLook=new T.Vector3(laneDrift,.72,carZ-22),droneLook=new T.Vector3(laneDrift,0,carZ-9);const look=new T.Vector3().lerpVectors(exteriorLook,povLook,pov).lerp(droneLook,aerial);camera.lookAt(look);
+  exteriorLook.set(laneDrift,.85,carZ-(isMobile?1.5:5.8));povLook.set(laneDrift,.72,carZ-22);droneLook.set(laneDrift,0,carZ-9);
+  look.lerpVectors(exteriorLook,povLook,pov).lerp(droneLook,aerial);camera.lookAt(look);
   cyanLight.position.set(laneDrift,3,carZ-4);
   const radarBlend=smooth(0,1,clamp((stateProgress-.46)/.18));
   const rfActive=radarBlend>.5;
@@ -346,10 +355,25 @@ function frame(now){const dt=Math.max(0,Math.min((now-previousTime)/1000,.25))||
   document.body.classList.toggle('rf-only',radarMix>.5);
   document.body.classList.toggle('cockpit-view',cockpitActive);
   document.body.classList.toggle('final-view',progress>=.88);
-  const viewStage=progress<.24?['01','NORMAL VIEW']:progress<.43?['02','ZOOM / VEHICLE PERSPECTIVE']:progress<.88?['03','IN-CAR 360° RF SCREEN']:['',''];
-  if(viewIndex)viewIndex.textContent=viewStage[0];if(viewLabel)viewLabel.textContent=viewStage[1];
-  const current=Math.min(5,Math.floor(progress*6));chapters.forEach((el,i)=>el.classList.toggle('is-current',i===current));if(railProgress)railProgress.style.height=`${progress*100}%`;if(railIndex)railIndex.textContent=String(current+1).padStart(2,'0');if(distance)distance.textContent=`${Math.round(progress*414).toString().padStart(3,'0')} M`;if(mode)mode.textContent=aerial>.45?'NETWORK / LIVE':pov>.5?'VEHICLE / RF POV':'CHASE / OPTICAL';
-  renderer.render(scene,camera);requestAnimationFrame(frame)}
+  const viewStageIndex=progress<.24?0:progress<.43?1:progress<.88?2:3;
+  if(viewStageIndex!==renderedView){const viewStage=viewStages[viewStageIndex];if(viewIndex)viewIndex.textContent=viewStage[0];if(viewLabel)viewLabel.textContent=viewStage[1];renderedView=viewStageIndex}
+  const current=Math.min(5,Math.floor(progress*6));
+  if(current!==renderedChapter){chapters.forEach((el,i)=>el.classList.toggle('is-current',i===current));if(railIndex)railIndex.textContent=String(current+1).padStart(2,'0');renderedChapter=current}
+  if(railProgress)railProgress.style.height=`${progress*100}%`;
+  const nextDistance=`${Math.round(progress*414).toString().padStart(3,'0')} M`;if(distance&&nextDistance!==renderedDistance){distance.textContent=nextDistance;renderedDistance=nextDistance}
+  const nextMode=aerial>.45?'NETWORK / LIVE':pov>.5?'VEHICLE / RF POV':'CHASE / OPTICAL';if(mode&&nextMode!==renderedMode){mode.textContent=nextMode;renderedMode=nextMode}
+  renderer.render(scene,camera);animationFrame=requestAnimationFrame(frame)}
+
+function resumeAnimation(){
+  if(document.hidden||animationFrame)return;
+  previousTime=performance.now();
+  animationFrame=requestAnimationFrame(frame);
+}
+function handleVisibilityChange(){
+  if(document.hidden){cancelAnimationFrame(animationFrame);animationFrame=0}
+  else resumeAnimation();
+}
+document.addEventListener('visibilitychange',handleVisibilityChange);
 
 const loadStartedAt=performance.now();
 const readyTimer=setInterval(()=>{
@@ -359,7 +383,7 @@ const readyTimer=setInterval(()=>{
     loader?.classList.add('is-ready');
   }
 },80);
-requestAnimationFrame(frame);
+resumeAnimation();
 
 
 

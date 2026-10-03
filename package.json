@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node build-pages.mjs",
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "check": "node --check build-pages.mjs && node --check invention-content.mjs && node --check automotive-research.mjs && node --check dist/assets/page-transition.js && node --check dist/assets/experience-bootstrap.js && node --check dist/assets/experience.js && npm run build"
   }
 }

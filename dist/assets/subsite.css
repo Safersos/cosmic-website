@@ -647,21 +647,6 @@ summary:focus-visible {
     pointer-events: none
 }
 
-.page-wash {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background: var(--paper);
-    transform: scaleY(0);
-    transform-origin: bottom;
-    pointer-events: none;
-    transition: transform .28s ease
-}
-
-body.is-leaving .page-wash {
-    transform: scaleY(1)
-}
-
 .content-reveal {
     transition: opacity .65s ease, transform .8s cubic-bezier(.16, 1, .3, 1)
 }

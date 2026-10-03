@@ -11,7 +11,7 @@ export function vehicle() {
   const loader = new GLTFLoader();
   loader.setDRACOLoader(decoder);
 
-  loader.load(new URL('./ferrari.glb', import.meta.url).href, gltf => {
+  loader.load(new URL('./ferrari.glb?v=20261003', import.meta.url).href, gltf => {
     const model = gltf.scene.children[0];
     const paint = new T.MeshPhysicalMaterial({color:0x307981, metalness:0.85, roughness:0.27, clearcoat:1, clearcoatRoughness:0.065});
 
