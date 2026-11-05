@@ -5,14 +5,14 @@ import { automotiveResearch } from './automotive-research.mjs';
 
 const emailIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>';
 const whatsappIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.3-4.7a8.5 8.5 0 1 1 16.2-4.1Z"/><path d="M8.2 7.5c-.8.5-1 1.5-.5 2.8 1 2.5 3.5 4.8 5.9 5.5 1.2.4 2.2.1 2.7-.8l.4-.8-2.7-1.3-.9 1c-1.5-.6-2.8-1.9-3.5-3.4l1-.8-1.3-2.6Z"/></svg>';
-const siteFooter=(className='subsite-footer')=>`<footer class="${className} cosmic-footer"><span class="footer-copyright">© 2026 Cosmic</span><nav class="footer-contact-icons" aria-label="Contact Cosmic"><a href="mailto:founder@cosmicperception.com?subject=Contact%20Cosmic" aria-label="Email Cosmic" title="Email Cosmic">${emailIcon}</a><a href="https://wa.me/krishnaprasad03" aria-label="Contact Cosmic on WhatsApp" title="WhatsApp" target="_blank" rel="noopener noreferrer">${whatsappIcon}</a></nav><span class="footer-tagline">RADIO-FREQUENCY PERCEPTION AS INFRASTRUCTURE</span></footer>`;
+const siteFooter=(className='subsite-footer', includeAccess=true)=>`<footer class="${className} cosmic-footer"><span class="footer-copyright">© 2026 Cosmic${includeAccess?' <span class="footer-divider" aria-hidden="true">|</span> <button class="footer-login" type="button" data-login-open><span>Access Board</span><i aria-hidden="true">↗</i></button>':''}</span><nav class="footer-contact-icons" aria-label="Contact Cosmic"><a href="mailto:founder@cosmicperception.com?subject=Contact%20Cosmic" aria-label="Email Cosmic" title="Email Cosmic">${emailIcon}</a><a href="https://wa.me/krishnaprasad03" aria-label="Contact Cosmic on WhatsApp" title="WhatsApp" target="_blank" rel="noopener noreferrer">${whatsappIcon}</a></nav><span class="footer-tagline">RADIO-FREQUENCY PERCEPTION AS INFRASTRUCTURE</span></footer>`;
 
 const active = (current, files) => files.includes(current) ? ' is-active' : '';
 const currentLink = (current, file) => current === file ? ' class="is-active" aria-current="page"' : '';
 const siteNav = (current = '') => `<a href="intelligence.html"${currentLink(current,'intelligence.html')}>Intelligence</a><a href="infrastructure.html"${currentLink(current,'infrastructure.html')}>Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger${active(current, ['automotive.html','robotics.html'])}">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html"${currentLink(current,'automotive.html')}>Automotive</a><a href="robotics.html"${currentLink(current,'robotics.html')}>Robotics</a></div></div><a class="mobile-journey-link" href="invention.html"${currentLink(current,'invention.html')}>The Journey</a>`;
 const mobileMenuButton = '<button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open navigation"><span></span><span></span><span></span></button>';
 
-const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script><link rel="stylesheet" href="assets/site-chrome.css?v=20261003-mobile-menu5"><script src="assets/page-transition.js?v=20261003" defer></script></head><body data-scene="${mode}">`;
+const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script><link rel="stylesheet" href="assets/site-chrome.css?v=20261105-login2"><script src="assets/page-transition.js?v=20261003" defer></script><script src="assets/login.js?v=20261105" defer></script></head><body data-scene="${mode}">`;
 
 const index = head('Perception as Infrastructure', 'Cosmic is developing radio-frequency perception infrastructure: an AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.', 'network') + `
 <link rel="stylesheet" href="assets/experience.css?v=20261003-mobile-footer2">
@@ -224,13 +224,74 @@ ${siteFooter()}
 </body></html>`;
 }
 
+const boardPage = head('Founder Access', 'Private founder workspace for Cosmic.', 'founders') + `
+<link rel="stylesheet" href="assets/subsite.css?v=20261105-login">
+<link rel="stylesheet" href="assets/founders.css?v=20261105-cofounder">
+<script src="assets/founders.js?v=20261105-profile" defer></script>
+<a class="skip-link" href="#page-content">Skip to content</a>
+<header class="subsite-nav">
+ <a class="brand" href="index.html" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic" width="1280" height="480"></a>
+ <div class="founders-header-actions"><button class="founders-signout" type="button" data-sign-out>Sign out <span aria-hidden="true">↗</span></button></div>
+</header>
+<main class="founders-page" id="page-content" data-protected-content hidden>
+ <div class="founders-shell">
+  <section class="founders-intro">
+   <div><span class="auto-eyebrow">COSMIC / FOUNDER WORKSPACE</span><h1>Built together.<br><em>Owned with purpose.</em></h1><p>Ownership, capital and the next chapter of Cosmic.</p></div>
+   <div class="founders-orbit" aria-hidden="true"><i></i><i></i><i></i><span>C</span><b></b></div>
+  </section>
+  <div class="founders-tabs" role="tablist" aria-label="Founder workspace">
+   <button type="button" role="tab" id="cap-table-tab" aria-controls="cap-table-panel" aria-selected="true" data-workspace-tab="cap-table">Cap table</button>
+   <button type="button" role="tab" id="fund-raises-tab" aria-controls="fund-raises-panel" aria-selected="false" tabindex="-1" data-workspace-tab="fund-raises">Fund raises</button>
+   <button type="button" role="tab" id="due-diligence-tab" aria-controls="due-diligence-panel" aria-selected="false" tabindex="-1" data-workspace-tab="due-diligence">Due diligence</button>
+   <button type="button" role="tab" id="accounts-tab" aria-controls="accounts-panel" aria-selected="false" tabindex="-1" data-workspace-tab="accounts">Books of accounts</button>
+  </div>
+  <section class="workspace-panel cap-table-panel" id="cap-table-panel" role="tabpanel" aria-labelledby="cap-table-tab" data-workspace-panel="cap-table">
+   <div class="workspace-heading"><div><span class="auto-eyebrow">01 / OWNERSHIP</span><h2>Proposed cap table<button type="button" class="proposal-badge admin-edit" data-admin-message="cap-edit-status">Edit</button></h2><p id="cap-edit-status" class="admin-status" role="status"></p></div></div>
+   <div class="ownership-ledger">
+    <section class="founder-schedule" aria-labelledby="founder-schedule-title">
+     <div class="ledger-heading founder-heading"><span class="ledger-number">01</span><div><h3 id="founder-schedule-title">The founding team</h3><p>Sweat equity and contribution awards, side by side.</p></div><p class="vesting-note"><strong>4-year vesting · 1-year cliff</strong><span>Applies to all founder awards</span></p></div>
+     <div class="ledger-scroll"><table class="ownership-table"><thead><tr><th scope="col">Shareholder</th><th scope="col">Sweat equity</th><th scope="col">Contribution award</th></tr></thead><tbody>
+      <tr><th scope="row"><span class="holder-icon">F</span><span>Primary founder<small>Founder</small></span></th><td>40<span>%</span></td><td>11<span>%</span><small>Pre-incorporation R&amp;D, IP and early capital contribution</small></td></tr>
+      <tr><th scope="row"><span class="holder-icon">C</span><span>Co-founder<small>Founding partner</small></span></th><td>7.5<span>%</span></td><td><span class="award-qualifier">upto</span> 8<span>%</span><small>@$1.79M Post Money Valuation</small></td></tr>
+      <tr><th scope="row"><span class="holder-icon optional">+</span><span>Second co-founder<small>Optional allocation</small></span></th><td>2.5<span>%</span></td><td class="allocation-empty">—<small>No contribution award specified</small></td></tr>
+     </tbody></table></div>
+     <div class="ledger-footnote"><span>Contribution basis</span><p>Founders and co-founders may be subject to additional shares that recognize IP, discounted capital, pre-incorporation expenses among other notable recorded contributions.</p></div>
+    </section>
+    <aside class="esop-reserve" aria-labelledby="reserve-title"><span class="reserve-label">02 / RESERVED FOR THE TEAM</span><h3 id="reserve-title">Room for<br><em>exceptional people.</em></h3><div class="reserve-value">5<span>%</span></div><p>ESOP pool · Reserved</p><button class="cap-table-expand" type="button" aria-expanded="false" aria-controls="esop-breakdown">Explore allocation <span aria-hidden="true">+</span></button><div class="esop-breakdown" id="esop-breakdown" hidden><div><span>Core tech team</span><strong>2%</strong></div><div><span>Legal team</span><strong>1%</strong></div><div><span>Management</span><strong>2%</strong></div></div></aside>
+   </div>
+   <section class="funding-schedule" aria-labelledby="funding-title"><div class="ledger-heading"><span class="ledger-number">03</span><div><h3 id="funding-title">The capital roadmap</h3><p>Proposed allocations for external investors.</p></div></div><div class="funding-rounds">
+    <article><span class="round-step">ROUND 01</span><div class="round-title"><h4>Pre-seed</h4><span class="round-terms">$125k @ 7% &amp; $350k uncapped SAFE</span></div><strong>11<span>%</span></strong><p>External investors</p><div class="funding-references"><h5>Selected seed round funding references</h5><ul><li><b>Wordware</b><span>$30M raised · $150M valuation</span></li><li><b>Slingshot AI</b><span>$30M raised · $220M valuation</span></li><li><b>Collate</b><span>$30M raised · Uncapped</span></li></ul></div></article>
+    <article><span class="round-step">ROUND 02</span><div class="round-title"><h4>Pre-Series A</h4><span class="round-terms">$25m @ $166m post-money</span></div><strong>15<span>%</span></strong><p>External investors</p></article>
+    <article><span class="round-step">ROUND 03</span><div class="round-title"><h4>Series A</h4><span class="round-terms">$60m @ $600m post-money</span></div><div class="round-percentage"><strong>10<span>%</span></strong><details class="dilution-note"><summary aria-label="Read Series A dilution note">*</summary><p>Series A dilution is contributed by the existing board at that time, in line with the company’s then-current ownership structure.</p></details></div><p>External investors</p></article>
+   </div></section>
+  </section>
+  <section class="workspace-panel workspace-empty" id="fund-raises-panel" role="tabpanel" aria-labelledby="fund-raises-tab" data-workspace-panel="fund-raises" hidden><span class="auto-eyebrow">Founder workspace</span><h2>Fund raises</h2><p>Data unavailable.</p></section>
+  <section class="workspace-panel" id="due-diligence-panel" role="tabpanel" aria-labelledby="due-diligence-tab" data-workspace-panel="due-diligence" hidden>
+   <div class="workspace-heading"><div><span class="auto-eyebrow">DUE DILIGENCE / PEOPLE</span><h2>Founders KYC</h2></div></div>
+   <article class="founder-profile" aria-labelledby="founder-profile-title">
+    <div class="ledger-heading"><span class="ledger-number">01</span><h3 id="founder-profile-title">Founder Profile</h3></div>
+    <div class="profile-content"><img class="profile-portrait" src="assets/founder-profile.jpg" alt="Krishna Prasad Sidheeshwaran" width="180" height="180"><div class="profile-name-row"><h4>KRISHNA PRASAD SIDHEESHWARAN</h4><button type="button" class="proposal-badge admin-edit" data-admin-message="profile-edit-status">Edit Profile</button></div><p id="profile-edit-status" class="admin-status" role="status"></p></div>
+   </article>
+   <article class="founder-profile" aria-labelledby="cofounder-profile-title">
+    <div class="ledger-heading"><span class="ledger-number">02</span><h3 id="cofounder-profile-title">Co-founder Profile</h3></div>
+    <div class="profile-content"><div class="profile-portrait profile-portrait-empty" role="img" aria-label="Co-founder photo placeholder"></div><div class="profile-name-row"><h4>Full Name</h4><button type="button" class="proposal-badge admin-edit" data-admin-message="cofounder-edit-status">Edit Profile</button></div><p id="cofounder-edit-status" class="admin-status" role="status"></p></div>
+   </article>
+  </section>
+  <section class="workspace-panel workspace-empty" id="accounts-panel" role="tabpanel" aria-labelledby="accounts-tab" data-workspace-panel="accounts" hidden><span class="auto-eyebrow">Founder workspace</span><h2>Books of accounts</h2><p>Data unavailable.</p></section>
+ </div>
+</main>
+${siteFooter('subsite-footer', false)}
+</body></html>`;
+
 const selectedPage=process.argv.find(arg=>arg.startsWith('--page='))?.slice(7);
-const publicPages = new Set(['intelligence.html','infrastructure.html','automotive.html','robotics.html','invention.html']);
+const publicPages = new Set(['intelligence.html','infrastructure.html','automotive.html','robotics.html','invention.html','login.html','board.html']);
 if(selectedPage&&selectedPage!=='index.html'&&!publicPages.has(selectedPage))throw new Error('Unknown page: '+selectedPage);
 mkdirSync('dist', {recursive:true});
 const output = new Map();
 if(!selectedPage||selectedPage==='index.html')output.set('index.html', index);
+if(!selectedPage||selectedPage==='login.html')output.set('login.html', index);
 for (const page of pages) if (publicPages.has(page.file)&&(!selectedPage||selectedPage===page.file)) output.set(page.file, subPage(page));
+if ((!selectedPage || selectedPage === 'board.html')) output.set('board.html', boardPage);
 
 for (const [file, html] of output) writeFileSync(`dist/${file}`, html);
 for (const [file, html] of output) {
