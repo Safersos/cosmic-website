@@ -12,7 +12,7 @@ const currentLink = (current, file) => current === file ? ' class="is-active" ar
 const siteNav = (current = '') => `<a href="intelligence.html"${currentLink(current,'intelligence.html')}>Intelligence</a><a href="infrastructure.html"${currentLink(current,'infrastructure.html')}>Infrastructure</a><div class="nav-dropdown"><a href="automotive.html" class="dropdown-trigger${active(current, ['automotive.html','robotics.html'])}">Implementation <span class="nav-chevron">▾</span></a><div class="dropdown-menu"><a href="automotive.html"${currentLink(current,'automotive.html')}>Automotive</a><a href="robotics.html"${currentLink(current,'robotics.html')}>Robotics</a></div></div><a class="mobile-journey-link" href="invention.html"${currentLink(current,'invention.html')}>The Journey</a>`;
 const mobileMenuButton = '<button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open navigation"><span></span><span></span><span></span></button>';
 
-const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script><link rel="stylesheet" href="assets/site-chrome.css?v=20261105-login2"><script src="assets/page-transition.js?v=20261003" defer></script><script src="assets/login.js?v=20261105" defer></script></head><body data-scene="${mode}">`;
+const head = (title, desc, mode) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cosmic — ${title}</title><meta name="description" content="${desc}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cosmic"><meta property="og:title" content="Cosmic — ${title}"><meta property="og:description" content="${desc}"><meta name="twitter:card" content="summary"><link rel="icon" href="assets/Cosmic%20icon.png"><link rel="stylesheet" href="assets/site.css"><script type="importmap">{"imports":{"three":"./assets/three.module.js"}}</script><link rel="stylesheet" href="assets/site-chrome.css?v=20261105-login2"><script src="assets/page-transition.js?v=20261003" defer></script><script src="assets/login.js?v=20261125-auth" defer></script></head><body data-scene="${mode}">`;
 
 const index = head('Perception as Infrastructure', 'Cosmic is developing radio-frequency perception infrastructure: an AI-generated, real-time world perception model that gives machines and software a shared understanding of physical space.', 'network') + `
 <link rel="stylesheet" href="assets/experience.css?v=20261003-mobile-footer2">
@@ -226,8 +226,8 @@ ${siteFooter()}
 
 const boardPage = head('Founder Access', 'Private founder workspace for Cosmic.', 'founders') + `
 <link rel="stylesheet" href="assets/subsite.css?v=20261105-login">
-<link rel="stylesheet" href="assets/founders.css?v=20261105-cofounder">
-<script src="assets/founders.js?v=20261105-profile" defer></script>
+<link rel="stylesheet" href="assets/founders.css?v=20261125-profiles">
+<script src="assets/founders.js?v=20261125-profiles" defer></script>
 <a class="skip-link" href="#page-content">Skip to content</a>
 <header class="subsite-nav">
  <a class="brand" href="index.html" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic" width="1280" height="480"></a>
@@ -244,9 +244,10 @@ const boardPage = head('Founder Access', 'Private founder workspace for Cosmic.'
    <button type="button" role="tab" id="fund-raises-tab" aria-controls="fund-raises-panel" aria-selected="false" tabindex="-1" data-workspace-tab="fund-raises">Fund raises</button>
    <button type="button" role="tab" id="due-diligence-tab" aria-controls="due-diligence-panel" aria-selected="false" tabindex="-1" data-workspace-tab="due-diligence">Due diligence</button>
    <button type="button" role="tab" id="accounts-tab" aria-controls="accounts-panel" aria-selected="false" tabindex="-1" data-workspace-tab="accounts">Books of accounts</button>
+   <button type="button" role="tab" id="documents-tab" aria-controls="documents-panel" aria-selected="false" tabindex="-1" data-workspace-tab="documents">Documents</button>
   </div>
   <section class="workspace-panel cap-table-panel" id="cap-table-panel" role="tabpanel" aria-labelledby="cap-table-tab" data-workspace-panel="cap-table">
-   <div class="workspace-heading"><div><span class="auto-eyebrow">01 / OWNERSHIP</span><h2>Proposed cap table<button type="button" class="proposal-badge admin-edit" data-admin-message="cap-edit-status">Edit</button></h2><p id="cap-edit-status" class="admin-status" role="status"></p></div></div>
+   <div class="workspace-heading"><div><span class="auto-eyebrow">01 / OWNERSHIP</span><h2>Proposed cap table<button type="button" class="proposal-badge admin-edit" data-admin-message="cap-edit-status">Edit</button><a class="proposal-badge cap-pdf-download" href="assets/documents/Cosmic-Cap-Table.pdf" download="Cosmic-Cap-Table.pdf">Download PDF <span aria-hidden="true">↓</span></a></h2><p id="cap-edit-status" class="admin-status" role="status"></p></div></div>
    <div class="ownership-ledger">
     <section class="founder-schedule" aria-labelledby="founder-schedule-title">
      <div class="ledger-heading founder-heading"><span class="ledger-number">01</span><div><h3 id="founder-schedule-title">The founding team</h3><p>Sweat equity and contribution awards.</p></div><p class="vesting-note"><strong>4-year vesting · 1-year cliff</strong><span>Applies to all founders</span></p></div>
@@ -278,6 +279,7 @@ const boardPage = head('Founder Access', 'Private founder workspace for Cosmic.'
    </article>
   </section>
   <section class="workspace-panel workspace-empty" id="accounts-panel" role="tabpanel" aria-labelledby="accounts-tab" data-workspace-panel="accounts" hidden><span class="auto-eyebrow">Founder workspace</span><h2>Books of accounts</h2><p>Data unavailable.</p></section>
+  <section class="workspace-panel workspace-empty" id="documents-panel" role="tabpanel" aria-labelledby="documents-tab" data-workspace-panel="documents" hidden><span class="auto-eyebrow">Founder workspace</span><h2>Documents</h2><p>No documents available yet.</p></section>
  </div>
 </main>
 ${siteFooter('subsite-footer', false)}

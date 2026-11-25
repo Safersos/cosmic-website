@@ -1,11 +1,8 @@
-(() => {
-  const sessionKey = 'cosmic-founder-authenticated';
+(async () => {
   const loginPath = '/login';
   const boardPath = '/board';
-  const credentials = { username: 'founders@cosmic', password: 'Hash_Password' };
   let opener;
 
-  const isAuthenticated = () => sessionStorage.getItem(sessionKey) === 'true';
   const close = () => {
     const sheet = document.querySelector('.login-sheet');
     if (!sheet) return;
@@ -45,17 +42,17 @@
       passwordToggle.querySelector('span').textContent = showing ? '◉' : '◉̸';
       password.focus();
     });
-    sheet.querySelector('form').addEventListener('submit', event => {
+    sheet.querySelector('form').addEventListener('submit', async event => {
       event.preventDefault();
       const form = event.currentTarget;
       const values = new FormData(form);
       const error = form.querySelector('.login-sheet__error');
-      if (values.get('username') === credentials.username && values.get('password') === credentials.password) {
-        sessionStorage.setItem(sessionKey, 'true');
-        location.href = boardPath;
-        return;
-      }
-      error.textContent = 'The username or password is incorrect.';
+      try {
+        const response=await fetch('/api/workspace?action=login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(values))});
+        const result=await response.json();
+        if(response.ok) { location.href=boardPath; return; }
+        error.textContent=result.error;
+      } catch { error.textContent='Unable to connect. Please try again.'; }
       form.elements.password.select();
     });
   };
@@ -74,10 +71,14 @@
 
   const protectedContent = document.querySelector('[data-protected-content]');
   if (protectedContent) {
-    if (!isAuthenticated()) {
+    let session;
+    try { const response=await fetch('/api/workspace'); if(response.ok) session=await response.json(); } catch {}
+    if (!session) {
       location.replace(loginPath);
     } else {
       protectedContent.hidden = false;
+      window.cosmicSession=session;
+      window.dispatchEvent(new CustomEvent('workspace-ready',{detail:session}));
       const tabs = [...document.querySelectorAll('[data-workspace-tab]')];
       const panels = [...document.querySelectorAll('[data-workspace-panel]')];
       const selectTab = name => {
@@ -96,9 +97,9 @@
         esopButton.setAttribute('aria-expanded', String(!expanded));
         esopBreakdown.hidden = expanded;
       });
-      document.querySelector('[data-sign-out]')?.addEventListener('click', () => {
-        sessionStorage.removeItem(sessionKey);
-        location.replace('/');
+      document.querySelector('[data-sign-out]')?.addEventListener('click', async () => {
+        const response=await fetch('/api/workspace?action=logout',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+        if(response.ok) location.replace('/');
       });
     }
   }

@@ -3,3 +3,13 @@
 /*.png
 /dist/*.jpg
 /dist/*.png
+
+# Local dependencies and Vercel configuration
+node_modules/
+.vercel/
+.env
+.env.*
+!.env.example
+# Generated previews and local QA artifacts
+tmp/
+output/
