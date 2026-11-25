@@ -55,7 +55,14 @@ function initializeProfiles(session) {
       dialog.innerHTML=`<form><h2>Edit ${id==='founder'?'founder':'co-founder'} profile</h2><div class="profile-form-grid">${Object.entries(fields).map(([k,v])=>input(k,k==='filingStatus'?['Filed','Pending']:v,data[k])).join('')}</div>${Object.entries(groups).map(([k,g])=>`<section data-group="${k}"><h3>${g.title}</h3><div class="entries"></div><button type="button" data-add="${k}">Add entry</button></section>`).join('')}<p role="status"></p><div class="profile-form-actions"><button type="button" data-cancel>Cancel</button><button type="submit">Save profile</button></div></form>`;
       const add=(key,row={})=>{ const entry=document.createElement('fieldset'); entry.innerHTML=`<legend>${groups[key].title} entry</legend><div class="profile-form-grid">${Object.entries(groups[key].fields).map(([k,v])=>input(k,v,row[k])).join('')}</div><button type="button">Remove entry</button>`; entry.querySelector('button').onclick=()=>entry.remove(); dialog.querySelector(`[data-group="${key}"] .entries`).append(entry); };
       for(const key of Object.keys(groups)) { for(const row of data[key]||[]) add(key,row); dialog.querySelector(`[data-add="${key}"]`).onclick=()=>add(key); }
-      dialog.querySelector('[data-cancel]').onclick=()=>dialog.close(); dialog.addEventListener('close',()=>{dialog.remove();button.focus();});
+      dialog.querySelector('[data-cancel]').onclick=()=>dialog.close();
+      dialog.addEventListener('click',event=>{
+        const bounds=dialog.getBoundingClientRect();
+        const clickedBackdrop=event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom;
+        if(clickedBackdrop) dialog.close();
+      });
+      dialog.addEventListener('cancel',event=>{event.preventDefault();dialog.close();});
+      dialog.addEventListener('close',()=>{dialog.remove();button.focus();});
       dialog.querySelector('form').onsubmit=async e=>{
         e.preventDefault(); const next={};
         for(const key of Object.keys(fields)) next[key]=dialog.querySelector(`[name="${key}"]`).value.trim();
