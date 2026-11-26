@@ -226,8 +226,8 @@ ${siteFooter()}
 
 const boardPage = head('Founder Access', 'Private founder workspace for Cosmic.', 'founders') + `
 <link rel="stylesheet" href="assets/subsite.css?v=20261105-login">
-<link rel="stylesheet" href="assets/founders.css?v=20261126-github-stats">
-<script src="assets/founders.js?v=20261126-github-stats" defer></script>
+<link rel="stylesheet" href="assets/founders.css?v=20261126-static-metrics">
+<script src="assets/founders.js?v=20261126-static-metrics" defer></script>
 <a class="skip-link" href="#page-content">Skip to content</a>
 <header class="subsite-nav">
  <a class="brand" href="index.html" aria-label="Cosmic home"><img src="assets/Cosmic%20logo.png" alt="Cosmic" width="1280" height="480"></a>
