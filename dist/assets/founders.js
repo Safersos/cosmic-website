@@ -69,7 +69,13 @@ function initializeProfiles(session) {
       overview.innerHTML=highlight('Email',data.email)+highlight('Phone',data.phone)+`<div><dt>LinkedIn</dt><dd>${linkedin}</dd></div>`+highlight('Address for service',data.address)+highlight('Tax residency',data.taxResidency)+highlight('Latest completed education',educationLabel(education))+highlight('Latest work experience',experience?join([experience.role,experience.organization,experience.start,experience.end||(experience.start?'Present':'' )]):'');
       const githubUsers=[...new Set((data.contributions||[]).filter(row=>row.category==='GitHub history').map(row=>githubUsername(row.githubUsername||row.url)).filter(Boolean))];
       const educationHistory=(data.education||[]).map(row=>{const degree=[row.qualification,row.field&&`in ${row.field}`].filter(Boolean).join(' ');return `<p>${esc([degree,row.status,row.year,row.institution].filter(Boolean).join(' · '))}</p>`;}).join('')||'<p>No entries yet.</p>';
-      summary.innerHTML='<dl>'+Object.entries(fields).filter(([key])=>key!=='name').map(([key,label])=>`<div><dt>${label}</dt><dd>${esc(data[key]||'Not added')}</dd></div>`).join('')+'</dl>'+Object.entries(groups).map(([key,g])=>`<section><h4>${g.title}</h4>${key==='education'?educationHistory:(data[key]||[]).map(row=>`<p>${Object.values(row).filter(Boolean).map(esc).join(' · ')}</p>`).join('')||'<p>No entries yet.</p>'}${key==='contributions'?githubUsers.map(username=>`<div class="github-heatmap" data-github-user="${esc(username)}">Loading GitHub contribution activity…</div>`).join(''):''}</section>`).join('');
+      const formatDate=value=>/^\d{4}-\d{2}-\d{2}$/.test(value||'')?value.split('-').reverse().join('-'):value;
+      const workHistory=(data.experience||[]).map(row=>{
+        const title=[row.role,row.organization&&`@ ${row.organization}`].filter(Boolean).join(' ');
+        const finish=row.end?formatDate(row.end):(row.start?'Present':'');
+        return `<p>${esc([title,finish].filter(Boolean).join(' — '))}</p>`;
+      }).join('')||'<p>No entries yet.</p>';
+      summary.innerHTML='<dl>'+Object.entries(fields).filter(([key])=>key!=='name').map(([key,label])=>`<div><dt>${label}</dt><dd>${esc(data[key]||'Not added')}</dd></div>`).join('')+'</dl>'+Object.entries(groups).map(([key,g])=>`<section><h4>${g.title}</h4>${key==='education'?educationHistory:key==='experience'?workHistory:(data[key]||[]).map(row=>`<p>${Object.values(row).filter(Boolean).map(esc).join(' · ')}</p>`).join('')||'<p>No entries yet.</p>'}${key==='contributions'?githubUsers.map(username=>`<div class="github-heatmap" data-github-user="${esc(username)}">Loading GitHub contribution activity…</div>`).join(''):''}</section>`).join('');
       summary.querySelectorAll('.github-heatmap').forEach(renderGitHubHeatmap);
     }
     render();
