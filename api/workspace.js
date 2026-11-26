@@ -76,7 +76,7 @@ export default async function handler(req, res) {
         group.forEach(result=>{additions+=result.additions||0;deletions+=result.deletions||0;commits+=result.commits||0;pending+=Number(Boolean(result.pending));});
       }
       const data={username,year,repositories:repos.length,commits,additions,deletions,net:additions-deletions,pending};
-      await sql`INSERT INTO cosmic_github_stats(username,year,data) VALUES (${username.toLowerCase()},${year},${JSON.stringify(data)}::jsonb) ON CONFLICT(username,year) DO UPDATE SET data=excluded.data,fetched_at=now()`;
+      if(!pending) await sql`INSERT INTO cosmic_github_stats(username,year,data) VALUES (${username.toLowerCase()},${year},${JSON.stringify(data)}::jsonb) ON CONFLICT(username,year) DO UPDATE SET data=excluded.data,fetched_at=now()`;
       return reply(200,data);
     }
     if(action==='logout' && req.method==='POST') { await sql`DELETE FROM cosmic_sessions WHERE token_hash=${hash(token)}`; cookie(''); return reply(200,{ok:true}); }
