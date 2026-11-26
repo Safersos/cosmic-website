@@ -2,16 +2,16 @@ const fields={name:'Full name',email:'Email',phone:'Phone',address:'Address for 
 const groups={education:{title:'Education history',fields:{qualification:['Bachelor’s','Master’s','Doctorate','Other degree','Professional qualification','Certification course'],institution:'Institution / awarding organization',field:'Degree field / course',year:'Graduation / completion year',status:['Completed','In progress','Drop out']}},experience:{title:'Work experience',fields:{organization:'Organization',role:'Role',start:'Start date',end:'End date (blank if current)',details:'Responsibilities'}},contributions:{title:'Achievements & contributions',fields:{category:['Achievement','Publication','Open source contribution','GitHub history','Other'],title:'Title',date:'Date',url:'Link',githubUsername:'GitHub username (for contribution heatmap)',details:'Details'}}};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const githubUsername=value=>{try{const url=new URL(value);return url.hostname.toLowerCase()==='github.com'?url.pathname.split('/').filter(Boolean)[0]:'';}catch{return String(value||'').replace(/^@/,'').trim();}};
-async function renderGitHubHeatmap(panel) {
+async function renderGitHubHeatmap(panel,metrics) {
   const username=panel.dataset.githubUser;
   try {
-    const [activityResponse,statsResponse]=await Promise.all([fetch(`/api/workspace?action=github&username=${encodeURIComponent(username)}`),fetch(`/api/workspace?action=github-stats&username=${encodeURIComponent(username)}`)]);
+    const activityResponse=await fetch(`/api/workspace?action=github&username=${encodeURIComponent(username)}`);
     const activity=await activityResponse.json(); if(!activityResponse.ok) throw Error(activity.error);
-    const stats=await statsResponse.json();
     const earliest=new Date(`${activity.days[0].date}T00:00:00Z`);
     const start=new Date(earliest); start.setUTCDate(start.getUTCDate()-start.getUTCDay());
-    const statsPanel=statsResponse.ok?`<aside class="github-stats" aria-label="GitHub code statistics"><strong>${stats.commits.toLocaleString()}</strong><span>commits in ${stats.year}</span><dl><div><dt>Lines added</dt><dd>+${stats.additions.toLocaleString()}</dd></div><div><dt>Lines removed</dt><dd>−${stats.deletions.toLocaleString()}</dd></div><div><dt>Net change</dt><dd>${stats.net>=0?'+':''}${stats.net.toLocaleString()}</dd></div><div><dt>Repositories</dt><dd>${stats.repositories.toLocaleString()}</dd></div></dl>${stats.pending?`<small>${stats.pending} repository statistic${stats.pending===1?' is':'s are'} still calculating on GitHub.</small>`:''}</aside>`:`<aside class="github-stats github-stats-unavailable"><strong>Code metrics</strong><span>${esc(stats.error||'Unavailable')}</span></aside>`;
-    panel.innerHTML=`<div class="github-heatmap-heading"><a href="https://github.com/${esc(activity.username)}" target="_blank" rel="noopener noreferrer">GitHub contribution activity · ${activity.year} ↗</a><span>Less <i></i><i></i><i></i><i></i><i></i> More</span></div><div class="github-heatmap-content"><div class="github-heatmap-grid" role="img" aria-label="${esc(activity.username)} GitHub contribution activity for ${activity.year}"></div>${statsPanel}</div>`;
+    const hasMetrics=metrics&&['year','repositories','commits','additions','deletions','net'].every(key=>Number.isFinite(metrics[key]));
+    const statsPanel=hasMetrics?`<aside class="github-stats" aria-label="GitHub code statistics"><strong>${metrics.commits.toLocaleString()}</strong><span>commits in ${metrics.year}</span><dl><div><dt>Lines added</dt><dd>+${metrics.additions.toLocaleString()}</dd></div><div><dt>Lines removed</dt><dd>−${metrics.deletions.toLocaleString()}</dd></div><div><dt>Net change</dt><dd>${metrics.net>=0?'+':''}${metrics.net.toLocaleString()}</dd></div><div><dt>Repositories</dt><dd>${metrics.repositories.toLocaleString()}</dd></div></dl><small>Static snapshot${metrics.capturedAt?` · ${esc(metrics.capturedAt)}`:''}</small></aside>`:'';
+    panel.innerHTML=`<div class="github-heatmap-heading"><a href="https://github.com/${esc(activity.username)}" target="_blank" rel="noopener noreferrer">GitHub contribution activity · ${activity.year} ↗</a><span>Less <i></i><i></i><i></i><i></i><i></i> More</span></div><div class="github-heatmap-content${hasMetrics?' has-stats':''}"><div class="github-heatmap-grid" role="img" aria-label="${esc(activity.username)} GitHub contribution activity for ${activity.year}"></div>${statsPanel}</div>`;
     const grid=panel.querySelector('.github-heatmap-grid');
     activity.days.forEach(({date,level})=>{const day=new Date(`${date}T00:00:00Z`);const week=Math.floor((day-start)/604800000);const cell=document.createElement('i');cell.className=`level-${level}`;cell.style.gridColumn=week+1;cell.style.gridRow=day.getUTCDay()+1;cell.title=`${date} · contribution level ${level}`;grid.append(cell);});
   } catch { panel.textContent=`GitHub contribution activity for ${username} is unavailable.`; panel.classList.add('github-heatmap-error'); }
@@ -77,7 +77,7 @@ function initializeProfiles(session) {
         return `<p>${esc([title,finish].filter(Boolean).join(' — '))}</p>`;
       }).join('')||'<p>No entries yet.</p>';
       summary.innerHTML='<dl>'+Object.entries(fields).filter(([key])=>key!=='name').map(([key,label])=>`<div><dt>${label}</dt><dd>${esc(data[key]||'Not added')}</dd></div>`).join('')+'</dl>'+Object.entries(groups).map(([key,g])=>`<section><h4>${g.title}</h4>${key==='education'?educationHistory:key==='experience'?workHistory:(data[key]||[]).map(row=>`<p>${Object.values(row).filter(Boolean).map(esc).join(' · ')}</p>`).join('')||'<p>No entries yet.</p>'}${key==='contributions'?githubUsers.map(username=>`<div class="github-heatmap" data-github-user="${esc(username)}">Loading GitHub contribution activity…</div>`).join(''):''}</section>`).join('');
-      summary.querySelectorAll('.github-heatmap').forEach(renderGitHubHeatmap);
+      summary.querySelectorAll('.github-heatmap').forEach(panel=>renderGitHubHeatmap(panel,data.githubMetrics));
     }
     render();
     button.onclick=()=>{
@@ -95,7 +95,7 @@ function initializeProfiles(session) {
       dialog.addEventListener('cancel',event=>{event.preventDefault();dialog.close();});
       dialog.addEventListener('close',()=>{dialog.remove();button.focus();});
       dialog.querySelector('form').onsubmit=async e=>{
-        e.preventDefault(); const next={};
+        e.preventDefault(); const next={}; if(data.githubMetrics) next.githubMetrics=data.githubMetrics;
         for(const key of Object.keys(fields)) next[key]=dialog.querySelector(`[name="${key}"]`).value.trim();
         for(const key of Object.keys(groups)) next[key]=[...dialog.querySelectorAll(`[data-group="${key}"] fieldset`)].map(row=>Object.fromEntries([...row.querySelectorAll('input,select')].map(i=>[i.name,i.value.trim()])));
         const save=dialog.querySelector('[type="submit"]'); save.disabled=true;

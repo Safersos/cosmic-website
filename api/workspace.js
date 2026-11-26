@@ -87,8 +87,10 @@ export default async function handler(req, res) {
       const textFields=['name','email','phone','address','emergencyRelation','emergencyName','emergencyPhone','nationality','taxResidency','filingStatus','linkedin'];
       const lists={education:['qualification','institution','field','year','status'],experience:['organization','role','start','end','details'],contributions:['category','title','date','url','githubUsername','details']};
       const validText=value=>typeof value==='string' && value.length<=2000;
-      if(Object.keys(body.data).some(key=>!textFields.includes(key)&&!Object.hasOwn(lists,key))) return reply(400,{error:'Unknown profile field'});
+      const metricFields=['year','repositories','commits','additions','deletions','net','capturedAt'];
+      if(Object.keys(body.data).some(key=>!textFields.includes(key)&&!Object.hasOwn(lists,key)&&key!=='githubMetrics')) return reply(400,{error:'Unknown profile field'});
       for(const key of textFields) if(body.data[key]!==undefined && !validText(body.data[key])) return reply(400,{error:'Invalid profile field'});
+      if(body.data.githubMetrics!==undefined&&(!body.data.githubMetrics||typeof body.data.githubMetrics!=='object'||Array.isArray(body.data.githubMetrics)||Object.entries(body.data.githubMetrics).some(([key,value])=>!metricFields.includes(key)||(key==='capturedAt'?(!validText(value)):!Number.isFinite(value))))) return reply(400,{error:'Invalid GitHub metrics'});
       if(body.data.filingStatus && !['Filed','Pending'].includes(body.data.filingStatus)) return reply(400,{error:'Choose Filed or Pending'});
       for(const [key,allowed] of Object.entries(lists)) {
         const rows=body.data[key]||[];
