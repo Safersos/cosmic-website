@@ -1,6 +1,19 @@
 const fields={name:'Full name',email:'Email',phone:'Phone',address:'Address for service',emergencyRelation:'Emergency contact relation',emergencyName:'Emergency contact name',emergencyPhone:'Emergency contact phone',nationality:'Nationality',taxResidency:'Tax residency',filingStatus:'30(b) filing status',linkedin:'LinkedIn profile link'};
-const groups={education:{title:'Education history',fields:{qualification:['Bachelor’s','Master’s','Doctorate','Other degree','Professional qualification','Certification course'],institution:'Institution / awarding organization',field:'Degree field / course',year:'Graduation / completion year',status:['Completed','In progress','Drop out']}},experience:{title:'Work experience',fields:{organization:'Organization',role:'Role',start:'Start date',end:'End date (blank if current)',details:'Responsibilities'}},contributions:{title:'Achievements & contributions',fields:{category:['Achievement','Publication','Open source contribution','GitHub history','Other'],title:'Title',date:'Date',url:'Link',details:'Details'}}};
+const groups={education:{title:'Education history',fields:{qualification:['Bachelor’s','Master’s','Doctorate','Other degree','Professional qualification','Certification course'],institution:'Institution / awarding organization',field:'Degree field / course',year:'Graduation / completion year',status:['Completed','In progress','Drop out']}},experience:{title:'Work experience',fields:{organization:'Organization',role:'Role',start:'Start date',end:'End date (blank if current)',details:'Responsibilities'}},contributions:{title:'Achievements & contributions',fields:{category:['Achievement','Publication','Open source contribution','GitHub history','Other'],title:'Title',date:'Date',url:'Link',githubUsername:'GitHub username (for contribution heatmap)',details:'Details'}}};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const githubUsername=value=>{try{const url=new URL(value);return url.hostname.toLowerCase()==='github.com'?url.pathname.split('/').filter(Boolean)[0]:'';}catch{return String(value||'').replace(/^@/,'').trim();}};
+async function renderGitHubHeatmap(panel) {
+  const username=panel.dataset.githubUser;
+  try {
+    const response=await fetch(`/api/workspace?action=github&username=${encodeURIComponent(username)}`);
+    const activity=await response.json(); if(!response.ok) throw Error(activity.error);
+    const earliest=new Date(`${activity.days[0].date}T00:00:00Z`);
+    const start=new Date(earliest); start.setUTCDate(start.getUTCDate()-start.getUTCDay());
+    panel.innerHTML=`<div class="github-heatmap-heading"><a href="https://github.com/${esc(activity.username)}" target="_blank" rel="noopener noreferrer">GitHub contribution activity · ${activity.year} ↗</a><span>Less <i></i><i></i><i></i><i></i><i></i> More</span></div><div class="github-heatmap-grid" role="img" aria-label="${esc(activity.username)} GitHub contribution activity for ${activity.year}"></div>`;
+    const grid=panel.querySelector('.github-heatmap-grid');
+    activity.days.forEach(({date,level})=>{const day=new Date(`${date}T00:00:00Z`);const week=Math.floor((day-start)/604800000);const cell=document.createElement('i');cell.className=`level-${level}`;cell.style.gridColumn=week+1;cell.style.gridRow=day.getUTCDay()+1;cell.title=`${date} · contribution level ${level}`;grid.append(cell);});
+  } catch { panel.textContent=`GitHub contribution activity for ${username} is unavailable.`; panel.classList.add('github-heatmap-error'); }
+}
 function initializeProfiles(session) {
   document.querySelector('[data-admin-message="cap-edit-status"]').onclick=()=>{document.querySelector('#cap-edit-status').textContent='Cap table editing is not available yet.';};
   for(const [index,id] of ['founder','cofounder'].entries()) {
@@ -36,17 +49,26 @@ function initializeProfiles(session) {
     });
     function render() {
       card.querySelector('h4').textContent=data.name||originalName;
-      const education=[...(data.education||[])].filter(row=>Object.values(row).some(Boolean)).sort((a,b)=>(Number(b.year)||0)-(Number(a.year)||0)).at(0);
+      const completedEducation=[...(data.education||[])].filter(row=>row.status==='Completed'&&Object.values(row).some(Boolean)).sort((a,b)=>(Number(b.year)||0)-(Number(a.year)||0));
+      const education=completedEducation.at(0);
       const experience=[...(data.experience||[])].filter(row=>Object.values(row).some(Boolean)).sort((a,b)=>{
         const current=row=>Boolean(row.start&&!row.end);
         return Number(current(b))-Number(current(a)) || (b.end||b.start||'').localeCompare(a.end||a.start||'') || (b.start||'').localeCompare(a.start||'');
       }).at(0);
       const join=values=>values.filter(Boolean).join(' · ');
+      const educationLabel=row=>{
+        if(!row) return '';
+        const degree=[row.qualification,row.field&&`in ${row.field}`].filter(Boolean).join(' ');
+        return [degree,row.status,row.year].filter(Boolean).join(' · ');
+      };
       const highlight=(label,value)=>`<div><dt>${label}</dt><dd>${esc(value||'Not added')}</dd></div>`;
       let linkedin=esc(data.linkedin||'Not added');
       try { const url=new URL(data.linkedin); if(['https:','http:'].includes(url.protocol)) linkedin=`<a href="${esc(url.href)}" target="_blank" rel="noopener noreferrer">${esc(data.linkedin)} ↗</a>`; } catch {}
-      overview.innerHTML=highlight('Email',data.email)+highlight('Phone',data.phone)+`<div><dt>LinkedIn</dt><dd>${linkedin}</dd></div>`+highlight('Address for service',data.address)+highlight('Tax residency',data.taxResidency)+highlight('Latest education',education?join([education.qualification,education.field,education.institution,education.year,education.status]):'')+highlight('Latest work experience',experience?join([experience.role,experience.organization,experience.start,experience.end||(experience.start?'Present':'' )]):'');
-      summary.innerHTML='<dl>'+Object.entries(fields).filter(([key])=>key!=='name').map(([key,label])=>`<div><dt>${label}</dt><dd>${esc(data[key]||'Not added')}</dd></div>`).join('')+'</dl>'+Object.entries(groups).map(([key,g])=>`<section><h4>${g.title}</h4>${(data[key]||[]).map(row=>`<p>${Object.values(row).filter(Boolean).map(esc).join(' · ')}</p>`).join('')||'<p>No entries yet.</p>'}</section>`).join('');
+      overview.innerHTML=highlight('Email',data.email)+highlight('Phone',data.phone)+`<div><dt>LinkedIn</dt><dd>${linkedin}</dd></div>`+highlight('Address for service',data.address)+highlight('Tax residency',data.taxResidency)+highlight('Latest completed education',educationLabel(education))+highlight('Latest work experience',experience?join([experience.role,experience.organization,experience.start,experience.end||(experience.start?'Present':'' )]):'');
+      const githubUsers=[...new Set((data.contributions||[]).filter(row=>row.category==='GitHub history').map(row=>githubUsername(row.githubUsername||row.url)).filter(Boolean))];
+      const educationHistory=(data.education||[]).map(row=>{const degree=[row.qualification,row.field&&`in ${row.field}`].filter(Boolean).join(' ');return `<p>${esc([degree,row.status,row.year,row.institution].filter(Boolean).join(' · '))}</p>`;}).join('')||'<p>No entries yet.</p>';
+      summary.innerHTML='<dl>'+Object.entries(fields).filter(([key])=>key!=='name').map(([key,label])=>`<div><dt>${label}</dt><dd>${esc(data[key]||'Not added')}</dd></div>`).join('')+'</dl>'+Object.entries(groups).map(([key,g])=>`<section><h4>${g.title}</h4>${key==='education'?educationHistory:(data[key]||[]).map(row=>`<p>${Object.values(row).filter(Boolean).map(esc).join(' · ')}</p>`).join('')||'<p>No entries yet.</p>'}${key==='contributions'?githubUsers.map(username=>`<div class="github-heatmap" data-github-user="${esc(username)}">Loading GitHub contribution activity…</div>`).join(''):''}</section>`).join('');
+      summary.querySelectorAll('.github-heatmap').forEach(renderGitHubHeatmap);
     }
     render();
     button.onclick=()=>{

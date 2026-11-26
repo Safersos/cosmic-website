@@ -37,13 +37,24 @@ export default async function handler(req, res) {
     const token=(req.headers.cookie||'').split(';').map(v=>v.trim()).find(v=>v.startsWith('cosmic_session='))?.slice(15)||'';
     const [user]=await sql`SELECT u.id,u.profile_id FROM cosmic_sessions s JOIN cosmic_users u ON u.id=s.user_id WHERE s.token_hash=${hash(token)} AND s.expires_at>now()`;
     if(!user) return reply(401,{error:'Please sign in.'});
+    if(action==='github' && req.method==='GET') {
+      const username=String(url.searchParams.get('username')||'').trim();
+      if(!/^[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?$/i.test(username)) return reply(400,{error:'Invalid GitHub username.'});
+      const year=new Date().getUTCFullYear();
+      const response=await fetch(`https://github.com/users/${encodeURIComponent(username)}/contributions?from=${year}-01-01&to=${year}-12-31`,{headers:{'User-Agent':'Cosmic founder workspace','Accept':'text/html'}});
+      if(!response.ok) return reply(404,{error:'GitHub activity is unavailable.'});
+      const page=await response.text();
+      const days=[...page.matchAll(/<td[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*data-level="([0-4])"[^>]*>/g)].map(([,date,level])=>({date,level:Number(level)}));
+      if(!days.length) return reply(404,{error:'GitHub activity is unavailable.'});
+      return reply(200,{username,year,days});
+    }
     if(action==='logout' && req.method==='POST') { await sql`DELETE FROM cosmic_sessions WHERE token_hash=${hash(token)}`; cookie(''); return reply(200,{ok:true}); }
     if(req.method==='GET') { const profiles=await sql`SELECT id,data FROM cosmic_profiles ORDER BY id`; return reply(200,{user:{id:user.id,profileId:user.profile_id},profiles}); }
     if(req.method==='PUT') {
       if(body.id!==user.profile_id) return reply(403,{error:'You can edit only your own profile.'});
       if(!body.data || typeof body.data!=='object' || Array.isArray(body.data)) return reply(400,{error:'Invalid profile'});
       const textFields=['name','email','phone','address','emergencyRelation','emergencyName','emergencyPhone','nationality','taxResidency','filingStatus','linkedin'];
-      const lists={education:['qualification','institution','field','year','status'],experience:['organization','role','start','end','details'],contributions:['category','title','date','url','details']};
+      const lists={education:['qualification','institution','field','year','status'],experience:['organization','role','start','end','details'],contributions:['category','title','date','url','githubUsername','details']};
       const validText=value=>typeof value==='string' && value.length<=2000;
       if(Object.keys(body.data).some(key=>!textFields.includes(key)&&!Object.hasOwn(lists,key))) return reply(400,{error:'Unknown profile field'});
       for(const key of textFields) if(body.data[key]!==undefined && !validText(body.data[key])) return reply(400,{error:'Invalid profile field'});
