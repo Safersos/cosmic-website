@@ -1,6 +1,8 @@
 import { neon } from '@neondatabase/serverless';
 import { randomBytes, createHash, scryptSync, timingSafeEqual } from 'node:crypto';
 const hash = value => createHash('sha256').update(value).digest('hex');
+const githubHeaders=token=>({Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2026-03-10','User-Agent':'Cosmic founder workspace',Authorization:`Bearer ${token}`});
+const githubGet=async(url,token)=>{const response=await fetch(url,{headers:githubHeaders(token)});if(!response.ok)throw Error(`GitHub returned ${response.status}`);return response.json();};
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   const reply = (status, data) => { res.statusCode=status; res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(data)); };
@@ -47,6 +49,35 @@ export default async function handler(req, res) {
       const days=[...page.matchAll(/<td[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*data-level="([0-4])"[^>]*>/g)].map(([,date,level])=>({date,level:Number(level)}));
       if(!days.length) return reply(404,{error:'GitHub activity is unavailable.'});
       return reply(200,{username,year,days});
+    }
+    if(action==='github-stats' && req.method==='GET') {
+      const username=String(url.searchParams.get('username')||'').trim();
+      if(!/^[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?$/i.test(username)) return reply(400,{error:'Invalid GitHub username.'});
+      if(!process.env.GITHUB_TOKEN) return reply(424,{error:'GitHub code metrics have not been connected yet.'});
+      const year=new Date().getUTCFullYear();
+      await sql`CREATE TABLE IF NOT EXISTS cosmic_github_stats (username text NOT NULL, year integer NOT NULL, data jsonb NOT NULL, fetched_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(username,year))`;
+      const [cached]=await sql`SELECT data FROM cosmic_github_stats WHERE username=${username.toLowerCase()} AND year=${year} AND fetched_at>now()-interval '12 hours'`;
+      if(cached) return reply(200,{...cached.data,cached:true});
+      const githubUser=await githubGet('https://api.github.com/user',process.env.GITHUB_TOKEN);
+      if(githubUser.login?.toLowerCase()!==username.toLowerCase()) return reply(403,{error:'The configured GitHub token must belong to this profile.'});
+      const repos=[];
+      for(let page=1;page<=10;page++) { const batch=await githubGet(`https://api.github.com/user/repos?affiliation=owner,collaborator,organization_member&per_page=100&page=${page}`,process.env.GITHUB_TOKEN); repos.push(...batch); if(batch.length<100) break; }
+      const after=Math.floor(Date.UTC(year,0,1)/1000);
+      let additions=0,deletions=0,commits=0,pending=0;
+      for(let cursor=0;cursor<repos.length;cursor+=5) {
+        const group=await Promise.all(repos.slice(cursor,cursor+5).map(async repo=>{
+          const response=await fetch(`https://api.github.com/repos/${repo.full_name}/stats/contributors`,{headers:githubHeaders(process.env.GITHUB_TOKEN)});
+          if(response.status===202) return {pending:true};
+          if(!response.ok) return {skip:true};
+          const contributors=await response.json(); const contributor=contributors.find(item=>item.author?.login?.toLowerCase()===username.toLowerCase());
+          if(!contributor) return {};
+          return contributor.weeks.filter(week=>week.w>=after).reduce((total,week)=>({additions:total.additions+week.a,deletions:total.deletions+week.d,commits:total.commits+week.c}),{additions:0,deletions:0,commits:0});
+        }));
+        group.forEach(result=>{additions+=result.additions||0;deletions+=result.deletions||0;commits+=result.commits||0;pending+=Number(Boolean(result.pending));});
+      }
+      const data={username,year,repositories:repos.length,commits,additions,deletions,net:additions-deletions,pending};
+      await sql`INSERT INTO cosmic_github_stats(username,year,data) VALUES (${username.toLowerCase()},${year},${JSON.stringify(data)}::jsonb) ON CONFLICT(username,year) DO UPDATE SET data=excluded.data,fetched_at=now()`;
+      return reply(200,data);
     }
     if(action==='logout' && req.method==='POST') { await sql`DELETE FROM cosmic_sessions WHERE token_hash=${hash(token)}`; cookie(''); return reply(200,{ok:true}); }
     if(req.method==='GET') { const profiles=await sql`SELECT id,data FROM cosmic_profiles ORDER BY id`; return reply(200,{user:{id:user.id,profileId:user.profile_id},profiles}); }

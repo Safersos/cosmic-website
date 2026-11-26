@@ -5,11 +5,13 @@ const githubUsername=value=>{try{const url=new URL(value);return url.hostname.to
 async function renderGitHubHeatmap(panel) {
   const username=panel.dataset.githubUser;
   try {
-    const response=await fetch(`/api/workspace?action=github&username=${encodeURIComponent(username)}`);
-    const activity=await response.json(); if(!response.ok) throw Error(activity.error);
+    const [activityResponse,statsResponse]=await Promise.all([fetch(`/api/workspace?action=github&username=${encodeURIComponent(username)}`),fetch(`/api/workspace?action=github-stats&username=${encodeURIComponent(username)}`)]);
+    const activity=await activityResponse.json(); if(!activityResponse.ok) throw Error(activity.error);
+    const stats=await statsResponse.json();
     const earliest=new Date(`${activity.days[0].date}T00:00:00Z`);
     const start=new Date(earliest); start.setUTCDate(start.getUTCDate()-start.getUTCDay());
-    panel.innerHTML=`<div class="github-heatmap-heading"><a href="https://github.com/${esc(activity.username)}" target="_blank" rel="noopener noreferrer">GitHub contribution activity · ${activity.year} ↗</a><span>Less <i></i><i></i><i></i><i></i><i></i> More</span></div><div class="github-heatmap-grid" role="img" aria-label="${esc(activity.username)} GitHub contribution activity for ${activity.year}"></div>`;
+    const statsPanel=statsResponse.ok?`<aside class="github-stats" aria-label="GitHub code statistics"><strong>${stats.commits.toLocaleString()}</strong><span>commits in ${stats.year}</span><dl><div><dt>Lines added</dt><dd>+${stats.additions.toLocaleString()}</dd></div><div><dt>Lines removed</dt><dd>−${stats.deletions.toLocaleString()}</dd></div><div><dt>Net change</dt><dd>${stats.net>=0?'+':''}${stats.net.toLocaleString()}</dd></div><div><dt>Repositories</dt><dd>${stats.repositories.toLocaleString()}</dd></div></dl>${stats.pending?`<small>${stats.pending} repository statistic${stats.pending===1?' is':'s are'} still calculating on GitHub.</small>`:''}</aside>`:`<aside class="github-stats github-stats-unavailable"><strong>Code metrics</strong><span>${esc(stats.error||'Unavailable')}</span></aside>`;
+    panel.innerHTML=`<div class="github-heatmap-heading"><a href="https://github.com/${esc(activity.username)}" target="_blank" rel="noopener noreferrer">GitHub contribution activity · ${activity.year} ↗</a><span>Less <i></i><i></i><i></i><i></i><i></i> More</span></div><div class="github-heatmap-content"><div class="github-heatmap-grid" role="img" aria-label="${esc(activity.username)} GitHub contribution activity for ${activity.year}"></div>${statsPanel}</div>`;
     const grid=panel.querySelector('.github-heatmap-grid');
     activity.days.forEach(({date,level})=>{const day=new Date(`${date}T00:00:00Z`);const week=Math.floor((day-start)/604800000);const cell=document.createElement('i');cell.className=`level-${level}`;cell.style.gridColumn=week+1;cell.style.gridRow=day.getUTCDay()+1;cell.title=`${date} · contribution level ${level}`;grid.append(cell);});
   } catch { panel.textContent=`GitHub contribution activity for ${username} is unavailable.`; panel.classList.add('github-heatmap-error'); }

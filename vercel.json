@@ -4,6 +4,9 @@
   "framework": null,
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/workspace.js": { "maxDuration": 60 }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
