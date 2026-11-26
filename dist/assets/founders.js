@@ -53,10 +53,11 @@ function initializeProfiles(session) {
       card.querySelector('h4').textContent=data.name||originalName;
       const completedEducation=[...(data.education||[])].filter(row=>row.status==='Completed'&&Object.values(row).some(Boolean)).sort((a,b)=>(Number(b.year)||0)-(Number(a.year)||0));
       const education=completedEducation.at(0);
-      const experience=[...(data.experience||[])].filter(row=>Object.values(row).some(Boolean)).sort((a,b)=>{
+      const sortExperience=rows=>[...rows].filter(row=>Object.values(row).some(Boolean)).sort((a,b)=>{
         const current=row=>Boolean(row.start&&!row.end);
         return Number(current(b))-Number(current(a)) || (b.end||b.start||'').localeCompare(a.end||a.start||'') || (b.start||'').localeCompare(a.start||'');
-      }).at(0);
+      });
+      const experience=sortExperience(data.experience||[]).at(0);
       const join=values=>values.filter(Boolean).join(' · ');
       const educationLabel=row=>{
         if(!row) return '';
@@ -70,7 +71,7 @@ function initializeProfiles(session) {
       const githubUsers=[...new Set((data.contributions||[]).filter(row=>row.category==='GitHub history').map(row=>githubUsername(row.githubUsername||row.url)).filter(Boolean))];
       const educationHistory=(data.education||[]).map(row=>{const degree=[row.qualification,row.field&&`in ${row.field}`].filter(Boolean).join(' ');return `<p>${esc([degree,row.status,row.year,row.institution].filter(Boolean).join(' · '))}</p>`;}).join('')||'<p>No entries yet.</p>';
       const formatDate=value=>/^\d{4}-\d{2}-\d{2}$/.test(value||'')?value.split('-').reverse().join('-'):value;
-      const workHistory=(data.experience||[]).map(row=>{
+      const workHistory=sortExperience(data.experience||[]).map(row=>{
         const title=[row.role,row.organization&&`@ ${row.organization}`].filter(Boolean).join(' ');
         const finish=row.end?formatDate(row.end):(row.start?'Present':'');
         return `<p>${esc([title,finish].filter(Boolean).join(' — '))}</p>`;
